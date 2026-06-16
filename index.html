@@ -1,0 +1,1671 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AIscentra — Intelligence Observatory</title>
+<meta name="description" content="Independent observation, evaluation and analysis of artificial intelligence systems. Observe. Compare. Understand AI.">
+<meta property="og:title" content="AIscentra — Intelligence Observatory">
+<meta property="og:description" content="Observe. Compare. Understand AI. The most transparent source of AI model data.">
+<meta property="og:image" content="og-image.svg">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="theme-color" content="#030303">
+<!-- Favicons — all devices -->
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<link rel="icon" type="image/png" sizes="32x32" href="favicon.svg">
+<link rel="icon" type="image/png" sizes="16x16" href="favicon.svg">
+<link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.svg">
+<link rel="mask-icon" href="favicon.svg" color="#73ffb9">
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+:root {
+  --obsidian: #030303;
+  --black: #000000;
+  --frost: #ffffff;
+  --silver: #e5e7eb;
+  --mint: #73ffb9;
+  --font: 'Inter', ui-sans-serif, system-ui, sans-serif;
+  --max: 1200px;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  background: var(--obsidian);
+  color: var(--frost);
+  font-family: var(--font);
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+
+/* ── NAV ── */
+nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+  background: rgba(3,3,3,0.92);
+  backdrop-filter: blur(16px);
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+}
+.nav-inner {
+  max-width: var(--max); margin: 0 auto;
+  padding: 0 40px; height: 58px;
+  display: flex; align-items: center; justify-content: space-between;
+}
+.nav-brand {
+  display: flex; align-items: center; gap: 12px;
+  text-decoration: none; color: var(--frost);
+}
+.nav-logo-svg {
+  width: 32px; height: 32px; flex-shrink: 0;
+}
+.nav-brand-text {
+  display: flex; flex-direction: column; gap: 0;
+  border-left: 1px solid rgba(255,255,255,0.12);
+  padding-left: 12px;
+}
+.nav-brand-name {
+  font-size: 15px; font-weight: 700;
+  letter-spacing: -0.025em; line-height: 1;
+  color: var(--frost);
+}
+.nav-brand-sub {
+  font-size: 10px; font-weight: 400;
+  color: rgba(255,255,255,0.35);
+  letter-spacing: .04em;
+  text-transform: uppercase;
+  line-height: 1;
+  margin-top: 3px;
+}
+.nav-links {
+  display: flex; align-items: center; gap: 28px; list-style: none;
+}
+.nav-links a {
+  font-size: 13px; font-weight: 500;
+  color: rgba(255,255,255,0.5);
+  text-decoration: none; transition: color .15s;
+}
+.nav-links a:hover { color: var(--frost); }
+.nav-links a.active { color: var(--mint); }
+.nav-cta {
+  font-size: 13px; font-weight: 500;
+  color: var(--obsidian) !important;
+  background: var(--frost);
+  padding: 7px 18px; border-radius: 9999px;
+  transition: opacity .15s !important;
+}
+.nav-cta:hover { opacity: 0.85 !important; }
+.nav-lang {
+  font-size: 11px; font-weight: 500;
+  color: rgba(255,255,255,0.3) !important;
+  letter-spacing: .06em;
+  border: 1px solid rgba(255,255,255,0.12);
+  padding: 4px 10px; border-radius: 9999px;
+}
+
+/* ── HERO ── */
+.hero {
+  min-height: 100vh;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  align-items: center;
+  gap: 0;
+  padding-top: 58px;
+  max-width: var(--max); margin: 0 auto;
+  padding-left: 40px; padding-right: 0;
+  position: relative;
+}
+
+.hero-left { padding-right: 60px; }
+
+.step-bars {
+  display: flex; align-items: flex-end; gap: 20px;
+  margin-bottom: 44px;
+}
+.step-item { display: flex; flex-direction: column; align-items: flex-start; gap: 8px; }
+.step-label {
+  font-size: 11px; font-weight: 500;
+  letter-spacing: .07em; text-transform: uppercase;
+  color: rgba(255,255,255,0.25);
+}
+.step-label.on { color: var(--mint); }
+.bar {
+  width: 3px; border-radius: 2px;
+}
+.bar-h1 { height: 48px; background: var(--mint); }
+.bar-h2 { height: 48px; background: rgba(255,255,255,0.12); }
+.bar-h3 { height: 32px; background: rgba(255,255,255,0.08); }
+.bar-h4 { height: 24px; background: rgba(255,255,255,0.06); }
+
+.hero-tag {
+  display: inline-flex; align-items: center; gap: 6px;
+  font-size: 11px; font-weight: 500;
+  color: var(--mint); letter-spacing: .06em;
+  border: 1px solid rgba(115,255,185,0.25);
+  padding: 4px 12px 4px 10px; border-radius: 9999px;
+  margin-bottom: 24px;
+}
+.live-dot {
+  width: 6px; height: 6px; border-radius: 50%;
+  background: var(--mint);
+  animation: blink 2s ease-in-out infinite;
+}
+@keyframes blink { 0%,100%{opacity:1} 50%{opacity:.25} }
+
+.hero-headline {
+  font-size: clamp(52px, 7.5vw, 100px);
+  font-weight: 700;
+  line-height: .96;
+  letter-spacing: -0.038em;
+  color: var(--frost);
+  margin-bottom: 4px;
+}
+.hero-headline .dim { color: rgba(255,255,255,0.2); }
+
+.hero-divider {
+  width: 100%; height: 1px;
+  background: rgba(255,255,255,0.08);
+  margin: 28px 0;
+}
+
+.hero-sub {
+  font-size: 16px; font-weight: 400;
+  line-height: 1.6;
+  color: rgba(229,231,235,0.55);
+  max-width: 440px; margin-bottom: 36px;
+}
+
+.hero-btns { display: flex; align-items: center; gap: 16px; flex-wrap: wrap; }
+.btn-primary {
+  display: inline-flex; align-items: center; gap: 6px;
+  font-size: 14px; font-weight: 600;
+  color: var(--obsidian); background: var(--frost);
+  padding: 11px 24px; border-radius: 9999px;
+  text-decoration: none; transition: opacity .15s;
+  letter-spacing: -0.01em;
+}
+.btn-primary:hover { opacity: .88; }
+.btn-ghost {
+  font-size: 14px; font-weight: 500;
+  color: rgba(255,255,255,0.45);
+  text-decoration: none; display: inline-flex; align-items: center; gap: 5px;
+  transition: color .15s;
+}
+.btn-ghost .arr { color: var(--mint); }
+.btn-ghost:hover { color: var(--frost); }
+
+/* Hero right — wireframe viz */
+.hero-right {
+  height: 100vh; position: relative;
+  display: flex; align-items: center; justify-content: center;
+  overflow: hidden;
+}
+.hero-right::before {
+  content: '';
+  position: absolute; inset: 0;
+  background-image:
+    radial-gradient(circle at 50% 50%, rgba(115,255,185,0.04) 0%, transparent 70%);
+}
+canvas#heroCanvas {
+  position: absolute; inset: 0;
+  width: 100%; height: 100%;
+}
+
+/* ── DOTTED BG ── */
+.dotted {
+  background-image: radial-gradient(circle, rgba(255,255,255,0.08) 1px, transparent 1px);
+  background-size: 28px 28px;
+}
+
+/* ── MISSION ── */
+.mission {
+  border-top: 1px solid rgba(255,255,255,0.06);
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+  padding: 100px 40px;
+}
+.mission-inner {
+  max-width: var(--max); margin: 0 auto;
+  display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: start;
+}
+.mission-label {
+  font-size: 11px; font-weight: 500;
+  letter-spacing: .08em; text-transform: uppercase;
+  color: rgba(255,255,255,0.3); margin-bottom: 20px;
+}
+.mission-title {
+  font-size: clamp(36px, 4vw, 54px);
+  font-weight: 700; letter-spacing: -0.032em; line-height: 1;
+}
+.mission-text {
+  font-size: 18px; line-height: 1.65;
+  color: rgba(229,231,235,0.6); padding-top: 4px;
+}
+.mission-text strong { color: var(--frost); font-weight: 500; }
+
+/* ── MARQUEE ── */
+.marquee-wrap {
+  overflow: hidden;
+  background: var(--frost);
+  padding: 36px 0;
+  border-top: 1px solid rgba(0,0,0,0.08);
+  border-bottom: 1px solid rgba(0,0,0,0.08);
+}
+.marquee-track {
+  display: flex; gap: 0;
+  animation: scroll 30s linear infinite;
+  width: max-content;
+}
+.marquee-track:hover { animation-play-state: paused; }
+@keyframes scroll { from{transform:translateX(0)} to{transform:translateX(-50%)} }
+.marquee-item {
+  font-size: clamp(48px, 7vw, 80px);
+  font-weight: 700; letter-spacing: -0.04em;
+  color: var(--obsidian); white-space: nowrap;
+  padding: 0 40px;
+  display: flex; align-items: center; gap: 40px;
+}
+.marquee-sep { color: var(--mint); font-size: 0.5em; }
+
+/* ── ECOSYSTEM ── */
+.ecosystem {
+  padding: 100px 40px;
+}
+.ecosystem-inner { max-width: var(--max); margin: 0 auto; }
+.section-label {
+  font-size: 11px; font-weight: 500;
+  letter-spacing: .08em; text-transform: uppercase;
+  color: var(--mint); margin-bottom: 16px;
+}
+.section-title {
+  font-size: clamp(36px, 4vw, 54px);
+  font-weight: 700; letter-spacing: -0.032em; line-height: 1;
+  margin-bottom: 60px;
+}
+
+/* carousel slider */
+.eco-slider-wrap {
+  position: relative;
+  display: flex; align-items: center;
+  gap: 0;
+}
+.eco-nav {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: 20px;
+}
+.eco-nav-arrows {
+  display: flex; align-items: center; gap: 12px;
+}
+.eco-arrow {
+  width: 36px; height: 36px; border-radius: 50%;
+  border: 1px solid rgba(255,255,255,0.12);
+  background: none; color: var(--frost);
+  cursor: pointer; display: flex; align-items: center; justify-content: center;
+  font-size: 14px; transition: all .15s;
+}
+.eco-arrow:hover { border-color: var(--mint); color: var(--mint); }
+
+.eco-cards {
+  display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px;
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.06);
+}
+.eco-card {
+  background: var(--obsidian); padding: 40px 36px;
+  position: relative; overflow: hidden;
+  transition: background .2s;
+  cursor: pointer;
+}
+.eco-card:hover { background: rgba(255,255,255,0.02); }
+.eco-card-tags {
+  display: flex; justify-content: space-between; align-items: center;
+  margin-bottom: 48px;
+}
+.eco-tag {
+  font-size: 11px; font-weight: 500;
+  letter-spacing: .07em; text-transform: uppercase;
+  color: rgba(255,255,255,0.3);
+}
+.eco-tag.accent { color: var(--mint); }
+.eco-icon {
+  width: 64px; height: 64px; margin-bottom: 28px;
+}
+.eco-name {
+  font-size: 28px; font-weight: 700;
+  letter-spacing: -0.025em; line-height: 1;
+  margin-bottom: 12px;
+}
+.eco-desc {
+  font-size: 14px; color: rgba(255,255,255,0.4); line-height: 1.6;
+  margin-bottom: 32px;
+}
+.eco-link {
+  font-size: 13px; font-weight: 500;
+  color: rgba(255,255,255,0.25);
+  text-decoration: none; display: inline-flex; align-items: center; gap: 4px;
+  transition: color .15s;
+}
+.eco-link .arr { color: var(--mint); }
+.eco-link:hover { color: var(--frost); }
+.eco-card::after {
+  content: '';
+  position: absolute; bottom: 0; left: 0; right: 0;
+  height: 2px; background: var(--mint); opacity: 0;
+  transition: opacity .2s;
+}
+.eco-card:hover::after { opacity: 1; }
+
+/* ── OBSERVATORY ── */
+.observatory {
+  background: var(--black);
+  padding: 100px 40px;
+  border-top: 1px solid rgba(255,255,255,0.05);
+}
+.obs-inner {
+  max-width: var(--max); margin: 0 auto;
+  display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: start;
+}
+.obs-feed { display: flex; flex-direction: column; gap: 0; }
+.obs-row {
+  display: grid; grid-template-columns: 20px 1fr auto;
+  gap: 16px; align-items: start;
+  padding: 16px 0;
+  border-bottom: 1px solid rgba(255,255,255,0.05);
+  transition: background .15s; cursor: default;
+}
+.obs-row:first-child { border-top: 1px solid rgba(255,255,255,0.05); }
+.obs-row:hover { background: rgba(255,255,255,0.02); }
+.obs-dot { width: 8px; height: 8px; border-radius: 50%; margin-top: 5px; flex-shrink: 0; }
+.d-up { background: var(--mint); }
+.d-new { background: #60a5fa; }
+.d-down { background: #f97066; }
+.d-info { background: rgba(255,255,255,0.25); }
+.obs-text { font-size: 13px; color: rgba(255,255,255,0.65); line-height: 1.5; }
+.obs-text strong { color: var(--frost); font-weight: 500; }
+.obs-cat { font-size: 11px; color: rgba(255,255,255,0.2); margin-top: 3px; }
+.obs-time { font-size: 11px; color: rgba(255,255,255,0.18); white-space: nowrap; padding-top: 4px; }
+
+/* Timeline */
+.obs-timeline {
+  position: relative; padding-left: 20px;
+}
+.obs-timeline::before {
+  content: ''; position: absolute; left: 0; top: 0; bottom: 0;
+  width: 1px; background: rgba(255,255,255,0.08);
+}
+.tl-item {
+  position: relative; margin-bottom: 28px; padding-left: 20px;
+}
+.tl-item::before {
+  content: ''; position: absolute; left: -24px; top: 6px;
+  width: 8px; height: 8px; border-radius: 50%;
+  border: 1px solid rgba(255,255,255,0.15);
+  background: var(--obsidian);
+}
+.tl-item.active::before { background: var(--mint); border-color: var(--mint); }
+.tl-date { font-size: 11px; color: rgba(255,255,255,0.2); margin-bottom: 4px; }
+.tl-event { font-size: 13px; font-weight: 500; color: rgba(255,255,255,0.6); }
+.tl-detail { font-size: 12px; color: rgba(255,255,255,0.25); margin-top: 2px; }
+
+/* ── INDEX ── */
+.index-section {
+  padding: 100px 40px;
+  border-top: 1px solid rgba(255,255,255,0.05);
+}
+.index-inner { max-width: var(--max); margin: 0 auto; }
+.index-header {
+  display: flex; justify-content: space-between; align-items: flex-end;
+  margin-bottom: 48px;
+}
+.model-cards {
+  display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px;
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.06);
+}
+.model-card {
+  background: var(--obsidian); padding: 28px 24px;
+  position: relative; overflow: hidden;
+}
+.model-card:hover { background: rgba(255,255,255,0.02); }
+.model-rank {
+  font-size: 11px; font-weight: 500;
+  letter-spacing: .07em; text-transform: uppercase;
+  color: rgba(255,255,255,0.2); margin-bottom: 20px;
+}
+.model-name { font-size: 22px; font-weight: 700; letter-spacing: -0.02em; margin-bottom: 4px; }
+.model-maker { font-size: 12px; color: rgba(255,255,255,0.3); margin-bottom: 20px; }
+.model-score-num { font-size: 36px; font-weight: 700; letter-spacing: -0.03em; color: var(--frost); }
+.model-score-label { font-size: 11px; color: rgba(255,255,255,0.2); margin-bottom: 12px; }
+.model-bar-bg { width: 100%; height: 2px; background: rgba(255,255,255,0.08); border-radius: 2px; margin-bottom: 16px; overflow:hidden; }
+.model-bar-fill { height: 100%; background: var(--mint); border-radius: 2px; transition: width 1.2s ease; width:0%; }
+.model-change {
+  font-size: 12px; font-weight: 500; display: inline-flex; align-items: center; gap: 4px;
+  padding: 3px 8px; border-radius: 4px;
+}
+.up { background: rgba(115,255,185,0.1); color: var(--mint); }
+.dn { background: rgba(249,112,102,0.1); color: #f97066; }
+.nc { background: rgba(255,255,255,0.05); color: rgba(255,255,255,0.3); }
+.model-cat {
+  font-size: 11px; color: rgba(255,255,255,0.2);
+  margin-top: 8px; text-transform: uppercase; letter-spacing: .06em;
+}
+
+/* ── ARENA ── */
+.arena-section {
+  padding: 100px 40px;
+  background: var(--black);
+  border-top: 1px solid rgba(255,255,255,0.05);
+}
+.arena-inner { max-width: var(--max); margin: 0 auto; }
+.arena-header { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 40px; }
+.arena-question {
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(255,255,255,0.08);
+  padding: 20px 24px; margin-bottom: 20px;
+  font-size: 15px; font-style: italic;
+  color: rgba(255,255,255,0.5); line-height: 1.5;
+}
+.arena-question strong { color: rgba(255,255,255,0.25); font-style:normal; font-size:11px; letter-spacing:.06em; text-transform:uppercase; display:block; margin-bottom:6px; }
+.arena-cards {
+  display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px;
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.06);
+  margin-bottom: 28px;
+}
+.arena-card { background: var(--black); padding: 24px; }
+.arena-card-top {
+  display: flex; justify-content: space-between; align-items: center;
+  margin-bottom: 16px;
+}
+.a-model { font-size: 12px; font-weight: 600; letter-spacing:.04em; text-transform:uppercase; color: rgba(255,255,255,0.4); }
+.a-score { font-size: 13px; font-weight: 600; color: var(--mint); }
+.a-text { font-size: 13px; line-height: 1.65; color: rgba(255,255,255,0.45); margin-bottom: 20px; }
+.a-bar-wrap { margin-bottom: 16px; }
+.a-bar-label { font-size: 10px; color: rgba(255,255,255,0.2); text-transform:uppercase; letter-spacing:.06em; margin-bottom:4px; }
+.a-bar-bg { height: 2px; background: rgba(255,255,255,0.06); border-radius:2px; overflow:hidden; }
+.a-bar-fill { height:100%; border-radius:2px; background: var(--mint); transition: width 1.2s ease; }
+.a-footer { display:flex; justify-content:space-between; align-items:center; padding-top:16px; border-top:1px solid rgba(255,255,255,0.05); }
+.a-votes { font-size:11px; color:rgba(255,255,255,0.18); }
+.vote-btn {
+  font-size:12px; font-weight:500;
+  color:rgba(255,255,255,0.3);
+  border:1px solid rgba(255,255,255,0.1);
+  background:none; padding:5px 14px; border-radius:9999px;
+  cursor:pointer; transition:all .15s;
+}
+.vote-btn:hover { color:var(--obsidian); background:var(--mint); border-color:var(--mint); }
+.vote-btn.voted { color:var(--obsidian); background:var(--mint); border-color:var(--mint); }
+.arena-cta { display:flex; align-items:center; gap:20px; }
+.arena-note { font-size:13px; color:rgba(255,255,255,0.2); }
+
+/* ── AI FINDER ── */
+.finder-section { padding: 100px 40px; border-top: 1px solid rgba(255,255,255,0.05); }
+.finder-inner { max-width: var(--max); margin: 0 auto; }
+.finder-input-wrap {
+  position: relative; margin-bottom: 20px;
+}
+.finder-input {
+  width: 100%;
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 0;
+  padding: 20px 24px;
+  font-size: 18px; font-weight: 400;
+  color: var(--frost); font-family: var(--font);
+  outline: none; transition: border-color .2s;
+  letter-spacing: -0.01em;
+}
+.finder-input::placeholder { color: rgba(255,255,255,0.2); }
+.finder-input:focus { border-color: rgba(115,255,185,0.4); }
+.finder-btn {
+  position: absolute; right: 16px; top: 50%; transform: translateY(-50%);
+  font-size: 13px; font-weight: 600;
+  color: var(--obsidian); background: var(--mint);
+  border: none; padding: 8px 18px; border-radius: 9999px;
+  cursor: pointer; transition: opacity .15s;
+}
+.finder-btn:hover { opacity: .85; }
+.finder-examples { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 32px; }
+.finder-pill {
+  font-size: 12px; font-weight: 500;
+  color: rgba(255,255,255,0.35);
+  border: 1px solid rgba(255,255,255,0.08);
+  padding: 6px 14px; border-radius: 9999px;
+  cursor: pointer; transition: all .15s;
+  background: none;
+}
+.finder-pill:hover { color: var(--frost); border-color: rgba(255,255,255,0.25); }
+.finder-result {
+  border: 1px solid rgba(115,255,185,0.2);
+  padding: 24px; display: none;
+  background: rgba(115,255,185,0.02);
+}
+.finder-result.show { display: block; }
+.finder-result-label { font-size:11px; letter-spacing:.07em; text-transform:uppercase; color:var(--mint); margin-bottom:12px; }
+.finder-result-text { font-size:15px; line-height:1.65; color:rgba(255,255,255,0.7); }
+
+/* ── REPORTS ── */
+.reports-section {
+  padding: 100px 40px;
+  background: var(--black);
+  border-top: 1px solid rgba(255,255,255,0.05);
+}
+.reports-inner { max-width: var(--max); margin: 0 auto; }
+.reports-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.06); }
+.report-card { background: var(--black); padding: 28px 24px; position:relative; overflow:hidden; }
+.report-card:hover { background: rgba(255,255,255,0.02); cursor:pointer; }
+.report-tag { font-size:11px; letter-spacing:.07em; text-transform:uppercase; color:rgba(255,255,255,0.25); margin-bottom:32px; }
+.report-num { font-size:36px; font-weight:700; letter-spacing:-0.04em; color:rgba(255,255,255,0.06); margin-bottom:16px; }
+.report-title { font-size:16px; font-weight:600; letter-spacing:-0.015em; line-height:1.3; margin-bottom:10px; }
+.report-desc { font-size:12px; color:rgba(255,255,255,0.3); line-height:1.5; margin-bottom:20px; }
+.report-link { font-size:12px; color:rgba(255,255,255,0.2); display:inline-flex; align-items:center; gap:4px; text-decoration:none; }
+.report-link .a { color:var(--mint); }
+
+/* ── OBSERVATORY MAP ── */
+.map-section { padding: 100px 40px; border-top: 1px solid rgba(255,255,255,0.05); }
+.map-inner { max-width: var(--max); margin: 0 auto; }
+.map-grid { display: grid; grid-template-columns: 220px 1fr; gap: 48px; align-items: start; }
+.map-categories { display: flex; flex-direction: column; gap: 0; }
+.map-cat-btn {
+  background: none; border: none; cursor: pointer;
+  text-align: left; padding: 14px 16px;
+  border-left: 2px solid transparent;
+  transition: all .15s;
+  font-family: var(--font);
+}
+.map-cat-btn.active { border-left-color: var(--mint); background: rgba(115,255,185,0.04); }
+.map-cat-name { font-size: 14px; font-weight: 500; color: rgba(255,255,255,0.4); transition: color .15s; }
+.map-cat-btn.active .map-cat-name { color: var(--frost); }
+.map-cat-count { font-size: 11px; color: rgba(255,255,255,0.2); margin-top: 2px; }
+.map-models { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.06); min-height: 360px; }
+.map-model { background: var(--obsidian); padding: 24px 20px; display:flex; flex-direction:column; gap:8px; }
+.map-model:hover { background: rgba(255,255,255,0.02); }
+.mm-name { font-size:15px; font-weight:600; letter-spacing:-0.01em; }
+.mm-maker { font-size:11px; color:rgba(255,255,255,0.25); text-transform:uppercase; letter-spacing:.05em; }
+.mm-tags { display:flex; gap:4px; flex-wrap:wrap; }
+.mm-tag { font-size:10px; padding:2px 7px; border:1px solid rgba(255,255,255,0.08); border-radius:4px; color:rgba(255,255,255,0.25); }
+
+/* ── ABOUT ── */
+.about-section {
+  padding: 100px 40px;
+  background: var(--black);
+  border-top: 1px solid rgba(255,255,255,0.05);
+}
+.about-inner { max-width: var(--max); margin: 0 auto; }
+.about-cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.06); }
+.about-card { background: var(--black); padding: 36px 32px; }
+.about-term { font-size: 20px; font-weight: 700; letter-spacing: -0.02em; color: var(--mint); margin-bottom: 12px; }
+.about-role { font-size: 12px; text-transform:uppercase; letter-spacing:.07em; color:rgba(255,255,255,0.25); margin-bottom:16px; }
+.about-desc { font-size: 14px; line-height: 1.65; color: rgba(255,255,255,0.45); }
+
+/* ── FOOTER ── */
+footer {
+  border-top: 1px solid rgba(255,255,255,0.06);
+  background: var(--obsidian);
+}
+.footer-top {
+  max-width: var(--max); margin: 0 auto;
+  padding: 60px 40px 40px;
+  display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: start;
+}
+.footer-brand-name { font-size:24px; font-weight:700; letter-spacing:-0.025em; margin-bottom:8px; }
+.footer-brand-sub { font-size:12px; color:rgba(255,255,255,0.25); margin-bottom:24px; line-height:1.5; max-width:280px; }
+.footer-links-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:32px; }
+.footer-links-col h4 { font-size:11px; font-weight:500; letter-spacing:.07em; text-transform:uppercase; color:rgba(255,255,255,0.25); margin-bottom:16px; }
+.footer-links-col a { display:block; font-size:13px; color:rgba(255,255,255,0.4); text-decoration:none; margin-bottom:10px; transition:color .15s; }
+.footer-links-col a:hover { color:var(--frost); }
+.footer-bottom {
+  max-width:var(--max); margin:0 auto;
+  padding:20px 40px;
+  display:flex; justify-content:space-between; align-items:center;
+  border-top:1px solid rgba(255,255,255,0.05);
+}
+.footer-copy { font-size:12px; color:rgba(255,255,255,0.2); }
+.footer-socials { display:flex; gap:20px; }
+.footer-socials a { font-size:12px; color:rgba(255,255,255,0.25); text-decoration:none; transition:color .15s; }
+.footer-socials a:hover { color:var(--frost); }
+
+/* ── RESPONSIVE ── */
+/* ── MONITOR BLOCK ── */
+.monitor-section {
+  padding: 80px 40px;
+  border-top: 1px solid rgba(255,255,255,0.05);
+  border-bottom: 1px solid rgba(255,255,255,0.05);
+  background: var(--obsidian);
+  overflow: hidden;
+}
+.monitor-inner {
+  max-width: var(--max); margin: 0 auto;
+}
+.monitor-header {
+  display: flex; justify-content: space-between; align-items: center;
+  margin-bottom: 48px;
+}
+.monitor-title-wrap { display: flex; flex-direction: column; gap: 4px; }
+.monitor-eyebrow {
+  font-size: 11px; font-weight: 500; letter-spacing: .08em;
+  text-transform: uppercase; color: var(--mint);
+}
+.monitor-title {
+  font-size: 28px; font-weight: 700; letter-spacing: -0.025em;
+}
+.monitor-status {
+  display: flex; align-items: center; gap: 8px;
+  font-size: 12px; font-weight: 500; color: rgba(255,255,255,0.3);
+}
+.monitor-status .live-dot { flex-shrink: 0; }
+
+/* Channels grid */
+.monitor-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1px;
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.06);
+  margin-bottom: 1px;
+}
+.monitor-channel {
+  background: var(--obsidian);
+  padding: 20px 20px 16px;
+}
+.ch-top {
+  display: flex; justify-content: space-between;
+  align-items: center; margin-bottom: 14px;
+}
+.ch-label {
+  font-size: 10px; font-weight: 500; letter-spacing: .09em;
+  text-transform: uppercase; color: rgba(255,255,255,0.25);
+}
+.ch-val {
+  font-size: 12px; font-weight: 600;
+  color: var(--mint); font-variant-numeric: tabular-nums;
+}
+/* Dash lines container */
+.ch-lines {
+  display: flex; flex-direction: column; gap: 5px;
+}
+.ch-line-wrap {
+  display: flex; align-items: center; gap: 8px; height: 3px;
+}
+.ch-line {
+  height: 3px; border-radius: 2px;
+  background: rgba(115,255,185,0.7);
+  transition: width 0.8s cubic-bezier(0.4,0,0.2,1);
+  min-width: 4px;
+}
+.ch-line.dim {
+  background: rgba(255,255,255,0.12);
+}
+.ch-line.bright {
+  background: var(--mint);
+  box-shadow: 0 0 6px rgba(115,255,185,0.4);
+}
+/* Step bars row at bottom */
+.step-emulator {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1px;
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.06);
+  border-top: none;
+}
+.step-em-item {
+  background: var(--obsidian);
+  padding: 14px 20px;
+  display: flex; align-items: center; gap: 12px;
+}
+.step-em-code {
+  font-size: 10px; font-weight: 600;
+  letter-spacing: .06em; text-transform: uppercase;
+  color: rgba(255,255,255,0.2); min-width: 48px;
+  white-space: nowrap;
+}
+.step-em-code.on { color: var(--mint); }
+.step-em-bar-wrap {
+  flex: 1; height: 2px; background: rgba(255,255,255,0.06);
+  border-radius: 2px; overflow: hidden; position: relative;
+}
+.step-em-fill {
+  position: absolute; left: 0; top: 0; height: 100%;
+  border-radius: 2px;
+}
+.fill-mint { background: var(--mint); }
+.fill-dim  { background: rgba(255,255,255,0.15); }
+@media(max-width:900px){
+  .hero { grid-template-columns:1fr; padding:100px 20px 60px; }
+  .hero-right { display:none; }
+  .mission-inner,.obs-inner { grid-template-columns:1fr; gap:40px; }
+  .eco-cards,.model-cards,.arena-cards,.reports-grid,.about-cards { grid-template-columns:1fr; }
+  .map-grid { grid-template-columns:1fr; }
+  .map-models { grid-template-columns:1fr 1fr; }
+  .footer-top { grid-template-columns:1fr; gap:40px; }
+  .footer-links-grid { grid-template-columns:1fr 1fr; }
+  .nav-inner { padding:0 20px; }
+  nav .nav-links li:not(.keep) { display:none; }
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-inner">
+    <a href="/" class="nav-brand">
+      <svg class="nav-logo-svg" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="20" cy="20" r="18" stroke="#73ffb9" stroke-width="1.2" opacity="0.5"/>
+        <path d="M20 5 L35 20 L20 35 L5 20 Z" stroke="white" stroke-width="1.2" fill="none" opacity="0.85"/>
+        <line x1="20" y1="5" x2="20" y2="35" stroke="white" stroke-width="0.5" opacity="0.15"/>
+        <line x1="5" y1="20" x2="35" y2="20" stroke="white" stroke-width="0.5" opacity="0.15"/>
+        <circle cx="20" cy="20" r="3" fill="#73ffb9"/>
+        <circle cx="20" cy="20" r="1.2" fill="#030303"/>
+        <path d="M20 5 A15 15 0 0 1 35 20" stroke="#73ffb9" stroke-width="2" stroke-linecap="round" fill="none"/>
+        <line x1="20" y1="2" x2="20" y2="5.5" stroke="#73ffb9" stroke-width="1.5" stroke-linecap="round" opacity="0.6"/>
+        <line x1="38" y1="20" x2="34.5" y2="20" stroke="#73ffb9" stroke-width="1.5" stroke-linecap="round" opacity="0.6"/>
+      </svg>
+      <div class="nav-brand-text">
+        <span class="nav-brand-name">AIscentra</span>
+        <span class="nav-brand-sub">Intelligence Observatory</span>
+      </div>
+    </a>
+    <ul class="nav-links">
+      <li><a href="#index">Index</a></li>
+      <li><a href="#arena" class="active">Arena</a></li>
+      <li><a href="#observatory">Signals</a></li>
+      <li><a href="#finder">AI Finder</a></li>
+      <li><a href="#reports">Reports</a></li>
+      <li class="keep"><a href="#" class="nav-lang">RU</a></li>
+      <li class="keep"><a href="#arena" class="nav-cta">Enter Arena →</a></li>
+    </ul>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-left">
+    <div class="step-bars">
+      <div class="step-item">
+        <span class="step-label on">ST/00</span>
+        <div class="bar bar-h1"></div>
+      </div>
+      <div class="step-item">
+        <span class="step-label on">01. Observe</span>
+        <div class="bar bar-h1"></div>
+      </div>
+      <div class="step-item">
+        <span class="step-label">02. Compare</span>
+        <div class="bar bar-h2"></div>
+      </div>
+      <div class="step-item">
+        <span class="step-label">03. Understand</span>
+        <div class="bar bar-h3"></div>
+      </div>
+      <div class="step-item">
+        <span class="step-label">04. Report</span>
+        <div class="bar bar-h4"></div>
+      </div>
+    </div>
+
+    <div class="hero-tag">
+      <span class="live-dot"></span>
+      Live Observatory Active
+    </div>
+
+    <h1 class="hero-headline">
+      Intelligence<br>
+      <span class="dim">Observatory.</span>
+    </h1>
+
+    <div class="hero-divider"></div>
+
+    <p class="hero-sub">
+      Observe. Compare. Understand AI.<br>
+      Independent observation, evaluation and analysis of artificial intelligence systems.
+    </p>
+
+    <div class="hero-btns">
+      <a href="#index" class="btn-primary">Explore AIscentrats →</a>
+      <a href="#index" class="btn-ghost">View AIscentra Index <span class="arr">↗</span></a>
+    </div>
+  </div>
+
+  <div class="hero-right dotted">
+    <canvas id="heroCanvas"></canvas>
+  </div>
+</section>
+
+<!-- MISSION -->
+<section class="mission">
+  <div class="mission-inner">
+    <div>
+      <div class="mission-label">Why AIscentra Exists</div>
+      <h2 class="mission-title">The state of AI<br>deserves clarity.</h2>
+    </div>
+    <div class="mission-text">
+      Сегодня тысячи людей используют ИИ ежедневно, но почти никто не понимает различия между моделями и их <strong>реальные возможности</strong>.<br><br>
+      AIscentra создана для наблюдения, анализа и документирования развития искусственного интеллекта. Не продаёт. Не продвигает. <strong>Только измеряет.</strong>
+    </div>
+  </div>
+</section>
+
+<!-- MARQUEE -->
+<div class="marquee-wrap">
+  <div class="marquee-track">
+    <div class="marquee-item">AIscentra <span class="marquee-sep">✦</span> Observe <span class="marquee-sep">✦</span> Compare <span class="marquee-sep">✦</span> Understand <span class="marquee-sep">✦</span> AIscentra <span class="marquee-sep">✦</span> Observe <span class="marquee-sep">✦</span> Compare <span class="marquee-sep">✦</span> Understand <span class="marquee-sep">✦</span></div>
+    <div class="marquee-item">AIscentra <span class="marquee-sep">✦</span> Observe <span class="marquee-sep">✦</span> Compare <span class="marquee-sep">✦</span> Understand <span class="marquee-sep">✦</span> AIscentra <span class="marquee-sep">✦</span> Observe <span class="marquee-sep">✦</span> Compare <span class="marquee-sep">✦</span> Understand <span class="marquee-sep">✦</span></div>
+  </div>
+</div>
+
+<!-- ECOSYSTEM -->
+<section class="ecosystem">
+  <div class="ecosystem-inner">
+    <div class="section-label">The AIscentra Ecosystem</div>
+    <h2 class="section-title">Three tools.<br>One observatory.</h2>
+    <div class="eco-cards">
+      <div class="eco-card">
+        <div class="eco-card-tags">
+          <span class="eco-tag">Evaluation</span>
+          <span class="eco-tag accent">Index</span>
+        </div>
+        <svg class="eco-icon" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="32" cy="32" r="28" stroke="rgba(255,255,255,0.15)" stroke-width="1"/>
+          <circle cx="32" cy="32" r="18" stroke="rgba(255,255,255,0.1)" stroke-width="1"/>
+          <circle cx="32" cy="32" r="8" stroke="rgba(115,255,185,0.4)" stroke-width="1"/>
+          <line x1="4" y1="32" x2="60" y2="32" stroke="rgba(255,255,255,0.08)" stroke-width="1"/>
+          <line x1="32" y1="4" x2="32" y2="60" stroke="rgba(255,255,255,0.08)" stroke-width="1"/>
+        </svg>
+        <div class="eco-name">AIscentra<br>Index</div>
+        <div class="eco-desc">Measure AI performance through continuous standardized evaluation across 8 categories.</div>
+        <a href="#index" class="eco-link">Explore Index <span class="arr">↗</span></a>
+      </div>
+      <div class="eco-card">
+        <div class="eco-card-tags">
+          <span class="eco-tag">Comparison</span>
+          <span class="eco-tag accent">Arena</span>
+        </div>
+        <svg class="eco-icon" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <ellipse cx="32" cy="32" rx="28" ry="14" stroke="rgba(255,255,255,0.15)" stroke-width="1"/>
+          <ellipse cx="32" cy="32" rx="28" ry="14" stroke="rgba(255,255,255,0.08)" stroke-width="1" transform="rotate(60 32 32)"/>
+          <ellipse cx="32" cy="32" rx="28" ry="14" stroke="rgba(115,255,185,0.3)" stroke-width="1" transform="rotate(120 32 32)"/>
+          <circle cx="32" cy="32" r="3" fill="rgba(115,255,185,0.6)"/>
+        </svg>
+        <div class="eco-name">AIscentra<br>Arena</div>
+        <div class="eco-desc">Compare AI models through real-world challenges. Vote, evaluate, influence the Index.</div>
+        <a href="#arena" class="eco-link">Enter Arena <span class="arr">↗</span></a>
+      </div>
+      <div class="eco-card">
+        <div class="eco-card-tags">
+          <span class="eco-tag">Discovery</span>
+          <span class="eco-tag accent">Guide</span>
+        </div>
+        <svg class="eco-icon" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M32 8 L56 32 L32 56 L8 32 Z" stroke="rgba(255,255,255,0.15)" stroke-width="1" fill="none"/>
+          <path d="M32 18 L46 32 L32 46 L18 32 Z" stroke="rgba(255,255,255,0.1)" stroke-width="1" fill="none"/>
+          <path d="M32 26 L38 32 L32 38 L26 32 Z" stroke="rgba(115,255,185,0.4)" stroke-width="1" fill="none"/>
+          <circle cx="32" cy="32" r="2" fill="rgba(115,255,185,0.8)"/>
+        </svg>
+        <div class="eco-name">AIscentra<br>Guide</div>
+        <div class="eco-desc">Find the right AI for your specific needs. Intelligent matching across all AIscentrats.</div>
+        <a href="#finder" class="eco-link">Find AI <span class="arr">↗</span></a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- MONITOR EMULATOR BLOCK -->
+<section class="monitor-section">
+  <div class="monitor-inner">
+    <div class="monitor-header">
+      <div class="monitor-title-wrap">
+        <div class="monitor-eyebrow">System Activity</div>
+        <div class="monitor-title">Observatory Load Monitor</div>
+      </div>
+      <div class="monitor-status">
+        <span class="live-dot"></span>
+        All systems operational
+      </div>
+    </div>
+
+    <!-- 4 channel load bars -->
+    <div class="monitor-grid">
+      <div class="monitor-channel">
+        <div class="ch-top">
+          <span class="ch-label">ST/00 · Observe</span>
+          <span class="ch-val" id="val0">--</span>
+        </div>
+        <div class="ch-lines" id="lines0"></div>
+      </div>
+      <div class="monitor-channel">
+        <div class="ch-top">
+          <span class="ch-label">01 · Compare</span>
+          <span class="ch-val" id="val1">--</span>
+        </div>
+        <div class="ch-lines" id="lines1"></div>
+      </div>
+      <div class="monitor-channel">
+        <div class="ch-top">
+          <span class="ch-label">02 · Understand</span>
+          <span class="ch-val" id="val2">--</span>
+        </div>
+        <div class="ch-lines" id="lines2"></div>
+      </div>
+      <div class="monitor-channel">
+        <div class="ch-top">
+          <span class="ch-label">03 · Report</span>
+          <span class="ch-val" id="val3">--</span>
+        </div>
+        <div class="ch-lines" id="lines3"></div>
+      </div>
+    </div>
+
+    <!-- Step bars at bottom -->
+    <div class="step-emulator">
+      <div class="step-em-item">
+        <span class="step-em-code on">ST/00</span>
+        <div class="step-em-bar-wrap">
+          <div class="step-em-fill fill-mint" id="sbar0" style="width:0%"></div>
+        </div>
+      </div>
+      <div class="step-em-item">
+        <span class="step-em-code on">01. Observe</span>
+        <div class="step-em-bar-wrap">
+          <div class="step-em-fill fill-mint" id="sbar1" style="width:0%"></div>
+        </div>
+      </div>
+      <div class="step-em-item">
+        <span class="step-em-code">02. Compare</span>
+        <div class="step-em-bar-wrap">
+          <div class="step-em-fill fill-dim" id="sbar2" style="width:0%"></div>
+        </div>
+      </div>
+      <div class="step-em-item">
+        <span class="step-em-code">03. Understand</span>
+        <div class="step-em-bar-wrap">
+          <div class="step-em-fill fill-dim" id="sbar3" style="width:0%"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- LIVE OBSERVATORY -->
+<section class="observatory" id="observatory">
+  <div class="obs-inner">
+    <div>
+      <div class="section-label">AIscentra Signals</div>
+      <h2 class="section-title" style="margin-bottom:32px">Live<br>Observatory</h2>
+      <p style="font-size:16px;color:rgba(255,255,255,0.35);line-height:1.6;margin-bottom:40px;max-width:360px">Real-time activity across the AI ecosystem. Every evaluation. Every shift. Every new AIscentrat.</p>
+      <div class="obs-feed">
+        <div class="obs-row">
+          <div class="obs-dot d-up"></div>
+          <div><div class="obs-text"><strong>Claude 3.5 Sonnet</strong> moved up to #1 in Analytics</div><div class="obs-cat">AIscentra Index · Analytics</div></div>
+          <div class="obs-time">2m ago</div>
+        </div>
+        <div class="obs-row">
+          <div class="obs-dot d-new"></div>
+          <div><div class="obs-text"><strong>New AIscentrat:</strong> Qwen 2.5-Max added to evaluation system</div><div class="obs-cat">Observatory · New Entry</div></div>
+          <div class="obs-time">41m ago</div>
+        </div>
+        <div class="obs-row">
+          <div class="obs-dot d-down"></div>
+          <div><div class="obs-text"><strong>GPT-4o</strong> dropped 2 positions in Mathematics after new round</div><div class="obs-cat">AIscentra Index · Mathematics</div></div>
+          <div class="obs-time">3h ago</div>
+        </div>
+        <div class="obs-row">
+          <div class="obs-dot d-info"></div>
+          <div><div class="obs-text"><strong>Arena challenge launched:</strong> Business Argumentation — 8 AIscentrats competing</div><div class="obs-cat">Arena · Business</div></div>
+          <div class="obs-time">5h ago</div>
+        </div>
+        <div class="obs-row">
+          <div class="obs-dot d-up"></div>
+          <div><div class="obs-text"><strong>Gemini 2.0 Flash</strong> set a speed record in Programming — 94.2pts</div><div class="obs-cat">AIscentra Index · Programming</div></div>
+          <div class="obs-time">Yesterday</div>
+        </div>
+      </div>
+    </div>
+    <div>
+      <div style="font-size:11px;letter-spacing:.07em;text-transform:uppercase;color:rgba(255,255,255,0.2);margin-bottom:24px">Activity Timeline</div>
+      <div class="obs-timeline">
+        <div class="tl-item active">
+          <div class="tl-date">Today, 14:32</div>
+          <div class="tl-event">Claude 3.5 — Index Update</div>
+          <div class="tl-detail">Analytics category · +3 points</div>
+        </div>
+        <div class="tl-item active">
+          <div class="tl-date">Today, 13:51</div>
+          <div class="tl-event">New AIscentrat: Qwen 2.5-Max</div>
+          <div class="tl-detail">First evaluation started</div>
+        </div>
+        <div class="tl-item active">
+          <div class="tl-date">Today, 11:08</div>
+          <div class="tl-event">GPT-4o — Mathematics drop</div>
+          <div class="tl-detail">−2 positions after AIscentrlum review</div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-date">Today, 09:20</div>
+          <div class="tl-event">Arena challenge: Business</div>
+          <div class="tl-detail">8 models · voting open</div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-date">Yesterday, 18:45</div>
+          <div class="tl-event">Gemini 2.0 Flash — record</div>
+          <div class="tl-detail">Programming · 94.2 / 100</div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-date">Yesterday, 15:10</div>
+          <div class="tl-event">Weekly Index recalculated</div>
+          <div class="tl-detail">All 47 AIscentrats updated</div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-date">2 days ago</div>
+          <div class="tl-event">Report published: State of AI</div>
+          <div class="tl-detail">June 2026 · Insights</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- INDEX -->
+<section class="index-section" id="index">
+  <div class="index-inner">
+    <div class="index-header">
+      <div>
+        <div class="section-label">AIscentra Index</div>
+        <h2 class="section-title">The Current<br>State of AI</h2>
+      </div>
+      <a href="#" class="btn-ghost">Full Index <span class="arr">↗</span></a>
+    </div>
+    <div class="model-cards">
+      <div class="model-card">
+        <div class="model-rank">Rank 01 · AIscentrat</div>
+        <div class="model-name">Claude 3.5</div>
+        <div class="model-maker">Anthropic</div>
+        <div class="model-score-num" id="s1">–</div>
+        <div class="model-score-label">AIscentra Score</div>
+        <div class="model-bar-bg"><div class="model-bar-fill" data-w="94"></div></div>
+        <span class="model-change up">▲ +1 this week</span>
+        <div class="model-cat">Best: Analytics</div>
+      </div>
+      <div class="model-card">
+        <div class="model-rank">Rank 02 · AIscentrat</div>
+        <div class="model-name">GPT-4o</div>
+        <div class="model-maker">OpenAI</div>
+        <div class="model-score-num" id="s2">–</div>
+        <div class="model-score-label">AIscentra Score</div>
+        <div class="model-bar-bg"><div class="model-bar-fill" data-w="91"></div></div>
+        <span class="model-change dn">▼ −2 this week</span>
+        <div class="model-cat">Best: Creativity</div>
+      </div>
+      <div class="model-card">
+        <div class="model-rank">Rank 03 · AIscentrat</div>
+        <div class="model-name">Gemini 2.0</div>
+        <div class="model-maker">Google</div>
+        <div class="model-score-num" id="s3">–</div>
+        <div class="model-score-label">AIscentra Score</div>
+        <div class="model-bar-bg"><div class="model-bar-fill" data-w="89"></div></div>
+        <span class="model-change up">▲ +3 this week</span>
+        <div class="model-cat">Best: Programming</div>
+      </div>
+      <div class="model-card">
+        <div class="model-rank">Rank 04 · AIscentrat</div>
+        <div class="model-name">Grok 2</div>
+        <div class="model-maker">xAI</div>
+        <div class="model-score-num" id="s4">–</div>
+        <div class="model-score-label">AIscentra Score</div>
+        <div class="model-bar-bg"><div class="model-bar-fill" data-w="85"></div></div>
+        <span class="model-change nc">— no change</span>
+        <div class="model-cat">Best: Logic</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ARENA -->
+<section class="arena-section" id="arena">
+  <div class="arena-inner">
+    <div class="arena-header">
+      <div>
+        <div class="section-label">AIscentra Arena</div>
+        <h2 class="section-title">Live model<br>comparison</h2>
+      </div>
+      <a href="#" class="btn-ghost">Full Arena <span class="arr">↗</span></a>
+    </div>
+    <div class="arena-question">
+      <strong>Current challenge · Logic</strong>
+      Explain the difference between machine learning and deep learning. Answer clearly, concisely, with a real-world analogy.
+    </div>
+    <div class="arena-cards">
+      <div class="arena-card">
+        <div class="arena-card-top">
+          <span class="a-model">Claude 3.5</span>
+          <span class="a-score">94.1</span>
+        </div>
+        <div class="a-text">Machine learning is teaching a system using rules and examples. Deep learning is a subset — it uses neural networks with many layers to form its own rules. Think of it like this: ML is teaching a child explicit rules, deep learning is how the brain builds intuition over thousands of experiences...</div>
+        <div class="a-bar-wrap">
+          <div class="a-bar-label">Relevance</div>
+          <div class="a-bar-bg"><div class="a-bar-fill" data-w="96"></div></div>
+        </div>
+        <div class="a-footer">
+          <span class="a-votes">2,847 votes</span>
+          <button class="vote-btn" onclick="castVote(this)">Vote</button>
+        </div>
+      </div>
+      <div class="arena-card">
+        <div class="arena-card-top">
+          <span class="a-model">GPT-4o</span>
+          <span class="a-score">91.8</span>
+        </div>
+        <div class="a-text">ML is the broad field of algorithms that improve from experience. Deep learning uses multi-layered neural networks that mimic the brain. The key difference: architecture depth and the scale of data required. A decision tree is ML; a language model like me is deep learning...</div>
+        <div class="a-bar-wrap">
+          <div class="a-bar-label">Relevance</div>
+          <div class="a-bar-bg"><div class="a-bar-fill" data-w="90"></div></div>
+        </div>
+        <div class="a-footer">
+          <span class="a-votes">2,311 votes</span>
+          <button class="vote-btn" onclick="castVote(this)">Vote</button>
+        </div>
+      </div>
+      <div class="arena-card">
+        <div class="arena-card-top">
+          <span class="a-model">Gemini 2.0</span>
+          <span class="a-score">89.4</span>
+        </div>
+        <div class="a-text">Imagine ML as a set of mail-sorting rules. Deep learning is when the system invents its own rules by looking at millions of examples. The difference is abstraction: ML needs a human to define features, deep learning extracts them automatically from raw data...</div>
+        <div class="a-bar-wrap">
+          <div class="a-bar-label">Relevance</div>
+          <div class="a-bar-bg"><div class="a-bar-fill" data-w="86"></div></div>
+        </div>
+        <div class="a-footer">
+          <span class="a-votes">1,994 votes</span>
+          <button class="vote-btn" onclick="castVote(this)">Vote</button>
+        </div>
+      </div>
+    </div>
+    <div class="arena-cta">
+      <a href="#" class="btn-primary">Enter Arena →</a>
+      <span class="arena-note">Your vote influences the AIscentra Index</span>
+    </div>
+  </div>
+</section>
+
+<!-- AI FINDER -->
+<section class="finder-section" id="finder">
+  <div class="finder-inner">
+    <div class="section-label">AIscentra Guide</div>
+    <h2 class="section-title">Ask AIscentra.<br><span style="color:rgba(255,255,255,0.2)">Get the right AI.</span></h2>
+    <div class="finder-input-wrap">
+      <input class="finder-input" id="finderInput" type="text" placeholder="What do you need AI for? e.g. Write code, Create content, Research a topic..." />
+      <button class="finder-btn" onclick="runFinder()">Find →</button>
+    </div>
+    <div class="finder-examples">
+      <button class="finder-pill" onclick="setFinder('Build a startup')">Build a startup</button>
+      <button class="finder-pill" onclick="setFinder('Write code')">Write code</button>
+      <button class="finder-pill" onclick="setFinder('Create content')">Create content</button>
+      <button class="finder-pill" onclick="setFinder('Research a topic')">Research a topic</button>
+      <button class="finder-pill" onclick="setFinder('Analyze data')">Analyze data</button>
+      <button class="finder-pill" onclick="setFinder('Learn something new')">Learn something new</button>
+    </div>
+    <div class="finder-result" id="finderResult">
+      <div class="finder-result-label">AIscentra Recommendation</div>
+      <div class="finder-result-text" id="finderResultText"></div>
+    </div>
+  </div>
+</section>
+
+<!-- REPORTS -->
+<section class="reports-section" id="reports">
+  <div class="reports-inner">
+    <div style="display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:48px">
+      <div>
+        <div class="section-label">Observatory Reports</div>
+        <h2 class="section-title">Research &<br>Analysis</h2>
+      </div>
+      <a href="#" class="btn-ghost">All Reports <span class="arr">↗</span></a>
+    </div>
+    <div class="reports-grid">
+      <div class="report-card">
+        <div class="report-tag">State of AI</div>
+        <div class="report-num">001</div>
+        <div class="report-title">State of AI — June 2026</div>
+        <div class="report-desc">Comprehensive overview of the AI landscape. Rankings, trends, breakthroughs.</div>
+        <a href="#" class="report-link">Read Report <span class="a">↗</span></a>
+      </div>
+      <div class="report-card">
+        <div class="report-tag">Comparison</div>
+        <div class="report-num">002</div>
+        <div class="report-title">Claude vs GPT — Deep Analysis</div>
+        <div class="report-desc">Head-to-head across all 8 evaluation categories with raw data.</div>
+        <a href="#" class="report-link">Read Report <span class="a">↗</span></a>
+      </div>
+      <div class="report-card">
+        <div class="report-tag">Business</div>
+        <div class="report-num">003</div>
+        <div class="report-title">Best AI Models for Business</div>
+        <div class="report-desc">Which AIscentrats perform best for real business tasks and workflows.</div>
+        <a href="#" class="report-link">Read Report <span class="a">↗</span></a>
+      </div>
+      <div class="report-card">
+        <div class="report-tag">Open Source</div>
+        <div class="report-num">004</div>
+        <div class="report-title">New Open Models Entering the Market</div>
+        <div class="report-desc">Emerging open-source AIscentrats challenging proprietary leaders.</div>
+        <a href="#" class="report-link">Read Report <span class="a">↗</span></a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- OBSERVATORY MAP -->
+<section class="map-section" id="map">
+  <div class="map-inner">
+    <div class="section-label">Observatory Map</div>
+    <h2 class="section-title" style="margin-bottom:48px">Explore the<br>AI Ecosystem</h2>
+    <div class="map-grid">
+      <div class="map-categories">
+        <button class="map-cat-btn active" onclick="setMap(this,'language')">
+          <div class="map-cat-name">Language Models</div>
+          <div class="map-cat-count">12 AIscentrats</div>
+        </button>
+        <button class="map-cat-btn" onclick="setMap(this,'image')">
+          <div class="map-cat-name">Image Models</div>
+          <div class="map-cat-count">8 AIscentrats</div>
+        </button>
+        <button class="map-cat-btn" onclick="setMap(this,'video')">
+          <div class="map-cat-name">Video Models</div>
+          <div class="map-cat-count">5 AIscentrats</div>
+        </button>
+        <button class="map-cat-btn" onclick="setMap(this,'research')">
+          <div class="map-cat-name">Research Tools</div>
+          <div class="map-cat-count">6 AIscentrats</div>
+        </button>
+        <button class="map-cat-btn" onclick="setMap(this,'code')">
+          <div class="map-cat-name">Code Models</div>
+          <div class="map-cat-count">7 AIscentrats</div>
+        </button>
+      </div>
+      <div class="map-models" id="mapModels">
+        <!-- populated by JS -->
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ABOUT -->
+<section class="about-section">
+  <div class="about-inner">
+    <div class="section-label">The AIscentra Glossary</div>
+    <h2 class="section-title" style="margin-bottom:48px">Understanding<br>the Observatory</h2>
+    <div class="about-cards">
+      <div class="about-card">
+        <div class="about-term">AIscentrat</div>
+        <div class="about-role">Participant</div>
+        <div class="about-desc">Any AI model connected to the AIscentra evaluation system. GPT, Claude, Gemini, Grok, Mistral — all of them are AIscentrats.</div>
+      </div>
+      <div class="about-card">
+        <div class="about-term">AIscentrlum</div>
+        <div class="about-role">Evaluator</div>
+        <div class="about-desc">An independent AI arbitrator that assesses responses from AIscentrats using 6 criteria: accuracy, logic, completeness, reliability, argumentation, and practical applicability.</div>
+      </div>
+      <div class="about-card">
+        <div class="about-term">AIscentra Index</div>
+        <div class="about-role">The Score</div>
+        <div class="about-desc">The central performance metric of the platform. A composite score reflecting a model's real capabilities based on all accumulated evaluation results across all categories.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-top">
+    <div>
+      <div class="footer-brand-name" style="display:flex;align-items:center;gap:12px;">
+        <svg width="28" height="28" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="20" cy="20" r="18" stroke="#73ffb9" stroke-width="1.2" opacity="0.4"/>
+          <path d="M20 5 L35 20 L20 35 L5 20 Z" stroke="white" stroke-width="1.2" fill="none" opacity="0.5"/>
+          <circle cx="20" cy="20" r="3" fill="#73ffb9" opacity="0.7"/>
+          <path d="M20 5 A15 15 0 0 1 35 20" stroke="#73ffb9" stroke-width="2" stroke-linecap="round" fill="none" opacity="0.6"/>
+        </svg>
+        AIscentra
+      </div>
+      <div class="footer-brand-sub">Independent observation, evaluation and analysis of artificial intelligence systems. Not affiliated with any AI company.</div>
+      <div style="display:flex;gap:16px;margin-top:20px">
+        <a href="#" style="font-size:12px;color:rgba(255,255,255,0.25);text-decoration:none;border:1px solid rgba(255,255,255,0.1);padding:6px 14px;border-radius:9999px;">Telegram ↗</a>
+        <a href="#" style="font-size:12px;color:rgba(255,255,255,0.25);text-decoration:none;border:1px solid rgba(255,255,255,0.1);padding:6px 14px;border-radius:9999px;">Twitter ↗</a>
+      </div>
+    </div>
+    <div class="footer-links-grid">
+      <div class="footer-links-col">
+        <h4>Platform</h4>
+        <a href="#">AIscentra Index</a>
+        <a href="#">Arena</a>
+        <a href="#">AI Guide / Finder</a>
+        <a href="#">Signals</a>
+      </div>
+      <div class="footer-links-col">
+        <h4>Content</h4>
+        <a href="#">Insights</a>
+        <a href="#">Reports</a>
+        <a href="#">Observatory Map</a>
+        <a href="#">Profiles</a>
+      </div>
+      <div class="footer-links-col">
+        <h4>About</h4>
+        <a href="#">Methodology</a>
+        <a href="#">AIscentrlum</a>
+        <a href="#">API Access</a>
+        <a href="#">Premium</a>
+      </div>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span class="footer-copy">© 2025–2026 AIscentra Intelligence Observatory</span>
+    <div class="footer-socials">
+      <a href="#">EN</a>
+      <a href="#">RU</a>
+      <a href="#">Privacy</a>
+      <a href="#">Terms</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+/* ── HERO CANVAS — Wireframe Network ── */
+const canvas = document.getElementById('heroCanvas');
+const ctx = canvas.getContext('2d');
+let W, H, nodes=[], animId;
+
+function resize(){
+  W = canvas.width = canvas.offsetWidth;
+  H = canvas.height = canvas.offsetHeight;
+}
+resize();
+window.addEventListener('resize', resize);
+
+class Node {
+  constructor(){
+    this.x = Math.random()*W;
+    this.y = Math.random()*H;
+    this.vx = (Math.random()-.5)*0.4;
+    this.vy = (Math.random()-.5)*0.4;
+    this.r = Math.random()*2+1;
+    this.mint = Math.random()<0.15;
+  }
+  update(){
+    this.x+=this.vx; this.y+=this.vy;
+    if(this.x<0||this.x>W) this.vx*=-1;
+    if(this.y<0||this.y>H) this.vy*=-1;
+  }
+}
+
+for(let i=0;i<60;i++) nodes.push(new Node());
+
+function draw(){
+  ctx.clearRect(0,0,W,H);
+  // connections
+  for(let i=0;i<nodes.length;i++){
+    for(let j=i+1;j<nodes.length;j++){
+      const dx=nodes[i].x-nodes[j].x, dy=nodes[i].y-nodes[j].y;
+      const d=Math.sqrt(dx*dx+dy*dy);
+      if(d<120){
+        const alpha=(1-d/120)*0.25;
+        ctx.beginPath();
+        ctx.moveTo(nodes[i].x,nodes[i].y);
+        ctx.lineTo(nodes[j].x,nodes[j].y);
+        ctx.strokeStyle = nodes[i].mint||nodes[j].mint
+          ? `rgba(115,255,185,${alpha})`
+          : `rgba(255,255,255,${alpha*0.5})`;
+        ctx.lineWidth=0.8;
+        ctx.stroke();
+      }
+    }
+  }
+  // nodes
+  nodes.forEach(n=>{
+    ctx.beginPath();
+    ctx.arc(n.x,n.y,n.r,0,Math.PI*2);
+    ctx.fillStyle = n.mint ? 'rgba(115,255,185,0.8)' : 'rgba(255,255,255,0.3)';
+    ctx.fill();
+    n.update();
+  });
+  animId = requestAnimationFrame(draw);
+}
+draw();
+
+/* ── SCORE COUNTER ANIMATION ── */
+function countUp(el, target, suffix=''){
+  let v=0, s=target/60;
+  const t=setInterval(()=>{
+    v+=s; if(v>=target){v=target;clearInterval(t);}
+    el.textContent=v.toFixed(1)+suffix;
+  },16);
+}
+const io = new IntersectionObserver(entries=>{
+  entries.forEach(e=>{
+    if(e.isIntersecting){
+      countUp(document.getElementById('s1'),94.1);
+      countUp(document.getElementById('s2'),91.8);
+      countUp(document.getElementById('s3'),89.4);
+      countUp(document.getElementById('s4'),85.7);
+      document.querySelectorAll('.model-bar-fill').forEach(b=>{
+        setTimeout(()=>{ b.style.width=b.dataset.w+'%'; },300);
+      });
+      io.disconnect();
+    }
+  });
+},{threshold:0.3});
+const indexSec = document.querySelector('.index-section');
+if(indexSec) io.observe(indexSec);
+
+/* ── ARENA BARS ── */
+const arenaIO = new IntersectionObserver(entries=>{
+  entries.forEach(e=>{
+    if(e.isIntersecting){
+      document.querySelectorAll('.a-bar-fill').forEach(b=>{
+        setTimeout(()=>{ b.style.width=b.dataset.w+'%'; },400);
+      });
+      arenaIO.disconnect();
+    }
+  });
+},{threshold:0.2});
+const arenaSec = document.querySelector('.arena-section');
+if(arenaSec) arenaIO.observe(arenaSec);
+
+/* ── VOTE ── */
+let voted=false;
+function castVote(btn){
+  if(voted) return;
+  voted=true;
+  btn.textContent='✓ Voted';
+  btn.classList.add('voted');
+  document.querySelectorAll('.vote-btn').forEach(b=>{if(b!==btn)b.disabled=true;});
+}
+
+/* ── FINDER ── */
+const answers = {
+  'build a startup': 'For building a startup, we recommend <strong>Claude 3.5 Sonnet</strong> (strategy, writing, analysis) paired with <strong>GPT-4o</strong> for coding and prototyping. Both rank in the top 3 of the AIscentra Index for business tasks.',
+  'write code': 'For coding tasks, <strong>Gemini 2.0 Flash</strong> holds the current #1 position in Programming. <strong>GPT-4o</strong> is a strong alternative with broader language support.',
+  'create content': 'For content creation, <strong>GPT-4o</strong> leads the Creativity category. <strong>Claude 3.5 Sonnet</strong> produces more structured long-form content with consistent voice.',
+  'research a topic': 'For research, <strong>Claude 3.5 Sonnet</strong> excels in analysis and source synthesis. <strong>Gemini 2.0 Flash</strong> is recommended for speed with real-time information.',
+  'analyze data': 'For data analysis, <strong>Claude 3.5 Sonnet</strong> ranks #1 in the Analytics category on the AIscentra Index. Strong structured reasoning and code interpretation.',
+  'learn something new': 'For learning, <strong>GPT-4o</strong> and <strong>Claude 3.5 Sonnet</strong> both excel at explanations. Claude provides more nuanced, layered explanations; GPT-4o is faster for quick questions.',
+};
+function setFinder(v){ document.getElementById('finderInput').value=v; runFinder(); }
+function runFinder(){
+  const v = document.getElementById('finderInput').value.trim().toLowerCase();
+  const res = document.getElementById('finderResult');
+  const txt = document.getElementById('finderResultText');
+  const match = Object.keys(answers).find(k=>v.includes(k.split(' ')[0]));
+  if(match){
+    txt.innerHTML = answers[match];
+    res.classList.add('show');
+  } else {
+    txt.innerHTML = 'Based on your query, we recommend exploring the <strong>AIscentra Index</strong> filtered by your use case. The Guide will match you with the top-performing AIscentrat for your specific need.';
+    res.classList.add('show');
+  }
+}
+document.getElementById('finderInput').addEventListener('keypress',e=>{if(e.key==='Enter')runFinder();});
+
+/* ── MAP ── */
+const mapData = {
+  language:[
+    {name:'Claude 3.5 Sonnet',maker:'Anthropic',tags:['#1 Analytics','Top 3']},
+    {name:'GPT-4o',maker:'OpenAI',tags:['#2 Overall','Creativity']},
+    {name:'Gemini 2.0 Flash',maker:'Google',tags:['#3 Overall','Speed']},
+    {name:'Grok 2',maker:'xAI',tags:['#4 Overall','Logic']},
+    {name:'Mistral Large 2',maker:'Mistral AI',tags:['Languages','Open']},
+    {name:'LLaMA 3.1',maker:'Meta',tags:['Open Source','Fast']},
+  ],
+  image:[
+    {name:'Midjourney v6',maker:'Midjourney',tags:['Art','#1 Image']},
+    {name:'Flux 1.1 Pro',maker:'Black Forest',tags:['Photorealism','Fast']},
+    {name:'Ideogram 2',maker:'Ideogram',tags:['Typography','Design']},
+    {name:'DALL-E 3',maker:'OpenAI',tags:['Instruction','Versatile']},
+    {name:'Stable Diffusion',maker:'Stability',tags:['Open Source','Custom']},
+    {name:'Adobe Firefly',maker:'Adobe',tags:['Commercial','Safe']},
+  ],
+  video:[
+    {name:'Veo 2',maker:'Google',tags:['#1 Video','Quality']},
+    {name:'Runway Gen-3',maker:'Runway',tags:['Creative','Popular']},
+    {name:'Sora',maker:'OpenAI',tags:['Long form','Cinematic']},
+    {name:'Kling 2',maker:'Kuaishou',tags:['Motion','Fast']},
+    {name:'Hailuo',maker:'MiniMax',tags:['Realistic','New']},
+  ],
+  research:[
+    {name:'Perplexity Pro',maker:'Perplexity',tags:['Real-time','Search']},
+    {name:'Deep Research',maker:'OpenAI',tags:['Deep Dive','Reports']},
+    {name:'Gemini Deep',maker:'Google',tags:['Analysis','Speed']},
+    {name:'You.com',maker:'You',tags:['Sources','Free']},
+    {name:'Elicit',maker:'Ought',tags:['Papers','Academic']},
+    {name:'Consensus',maker:'Consensus',tags:['Science','Citations']},
+  ],
+  code:[
+    {name:'Cursor AI',maker:'Cursor',tags:['IDE','Popular']},
+    {name:'GitHub Copilot',maker:'GitHub',tags:['Inline','Trusted']},
+    {name:'Codeium',maker:'Codeium',tags:['Free','Fast']},
+    {name:'Tabnine',maker:'Tabnine',tags:['Privacy','Teams']},
+    {name:'Replit AI',maker:'Replit',tags:['Cloud','Beginner']},
+    {name:'Amazon Q',maker:'Amazon',tags:['AWS','Enterprise']},
+  ],
+};
+function setMap(btn, cat){
+  document.querySelectorAll('.map-cat-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  const models = mapData[cat]||[];
+  const el = document.getElementById('mapModels');
+  el.innerHTML = models.map(m=>`
+    <div class="map-model">
+      <div class="mm-name">${m.name}</div>
+      <div class="mm-maker">${m.maker}</div>
+      <div class="mm-tags">${m.tags.map(t=>`<span class="mm-tag">${t}</span>`).join('')}</div>
+    </div>
+  `).join('');
+}
+setMap(document.querySelector('.map-cat-btn'), 'language');
+
+/* ── MONITOR EMULATOR ── */
+(function(){
+  const CHANNELS = 4;
+  const LINES_PER_CH = 7;
+  const channelStates = [];
+
+  // Init each channel with random dash-line widths
+  for(let c=0;c<CHANNELS;c++){
+    const lines=[];
+    for(let l=0;l<LINES_PER_CH;l++){
+      lines.push(Math.random());
+    }
+    channelStates.push({ lines, load: Math.random()*60+20 });
+  }
+
+  // Build DOM lines
+  for(let c=0;c<CHANNELS;c++){
+    const container = document.getElementById('lines'+c);
+    if(!container) continue;
+    container.innerHTML='';
+    for(let l=0;l<LINES_PER_CH;l++){
+      const wrap = document.createElement('div');
+      wrap.className='ch-line-wrap';
+      // each row has 2-4 dashes
+      const numDashes = Math.floor(Math.random()*3)+2;
+      const totalGap = 8*(numDashes-1);
+      for(let d=0;d<numDashes;d++){
+        const dash = document.createElement('div');
+        dash.className='ch-line'+(Math.random()>0.7?' bright':Math.random()>0.5?'':' dim');
+        dash.style.width = Math.floor(Math.random()*60+10)+'px';
+        dash.dataset.ch=c; dash.dataset.line=l; dash.dataset.dash=d;
+        wrap.appendChild(dash);
+      }
+      container.appendChild(wrap);
+    }
+  }
+
+  // Update values display
+  function updateVals(){
+    for(let c=0;c<CHANNELS;c++){
+      const el = document.getElementById('val'+c);
+      if(el){
+        const v = channelStates[c].load;
+        el.textContent = v.toFixed(1)+'%';
+        el.style.color = v>80?'#f97066': v>50?'#73ffb9':'rgba(115,255,185,0.6)';
+      }
+    }
+  }
+
+  // Animate bottom step bars
+  const sbarTargets=[0,0,0,0];
+  function animateStepBars(){
+    for(let i=0;i<4;i++){
+      const bar=document.getElementById('sbar'+i);
+      if(!bar) continue;
+      // Slowly drift each bar
+      sbarTargets[i] += (Math.random()-0.5)*12;
+      sbarTargets[i] = Math.max(8, Math.min(95, sbarTargets[i]));
+      if(sbarTargets[i]===0) sbarTargets[i]=30+Math.random()*40;
+      bar.style.width = sbarTargets[i]+'%';
+      bar.style.transition = 'width '+(1.5+Math.random())+'s cubic-bezier(0.4,0,0.2,1)';
+    }
+  }
+  // Init step bars
+  setTimeout(()=>{
+    sbarTargets[0]=78; sbarTargets[1]=62; sbarTargets[2]=41; sbarTargets[3]=29;
+    animateStepBars();
+  },400);
+
+  // Animate dash lines — smooth continuous
+  function tickLines(){
+    for(let c=0;c<CHANNELS;c++){
+      // drift load value
+      channelStates[c].load += (Math.random()-0.48)*3;
+      channelStates[c].load = Math.max(10, Math.min(98, channelStates[c].load));
+
+      // update a random subset of dashes
+      const container = document.getElementById('lines'+c);
+      if(!container) continue;
+      const allDashes = container.querySelectorAll('.ch-line');
+      const count = Math.floor(allDashes.length * 0.4);
+      for(let i=0;i<count;i++){
+        const idx = Math.floor(Math.random()*allDashes.length);
+        const dash = allDashes[idx];
+        const newW = Math.floor(Math.random()*70+6);
+        dash.style.width = newW+'px';
+        dash.style.transition = 'width '+(0.6+Math.random()*1.2)+'s ease';
+        // randomly toggle brightness
+        if(Math.random()>0.7){
+          dash.classList.toggle('bright');
+          dash.classList.remove('dim');
+        }
+      }
+    }
+    updateVals();
+  }
+
+  // Init display
+  updateVals();
+
+  // Run at different intervals for organic feel
+  setInterval(tickLines, 700);
+  setInterval(animateStepBars, 2200);
+})();
+</script>
+</body>
+</html>
