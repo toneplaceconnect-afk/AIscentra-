@@ -4,9 +4,9 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>AIscentra — Intelligence Observatory</title>
-<meta name="description" content="Independent observation, evaluation and analysis of artificial intelligence systems. Observe. Compare. Understand AI.">
+<meta name="description" content="Independent observation and analysis of artificial intelligence systems. Observe. Analyse. Understand AI.">
 <meta property="og:title" content="AIscentra — Intelligence Observatory">
-<meta property="og:description" content="Observe. Compare. Understand AI. The most transparent source of AI model data.">
+<meta property="og:description" content="Observe. Analyse. Understand AI. The most transparent source of AI model data.">
 <meta property="og:image" content="og-image.svg">
 <meta property="og:type" content="website">
 <meta name="twitter:card" content="summary_large_image">
@@ -181,6 +181,9 @@ nav {
   height: 100vh; position: relative;
   display: flex; align-items: center; justify-content: center;
   overflow: hidden;
+  transform-style: preserve-3d;
+  transition: transform 0.3s ease-out;
+  will-change: transform, opacity;
 }
 .hero-right::before {
   content: '';
@@ -192,6 +195,24 @@ canvas#heroCanvas {
   position: absolute; inset: 0;
   width: 100%; height: 100%;
 }
+.node-card {
+  position: absolute;
+  background: rgba(3,3,3,0.92);
+  border: 1px solid rgba(115,255,185,0.25);
+  padding: 10px 14px;
+  font-size: 12px;
+  line-height: 1.5;
+  color: rgba(255,255,255,0.85);
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.12s ease;
+  white-space: nowrap;
+  z-index: 5;
+  backdrop-filter: blur(6px);
+}
+.node-card.show { opacity: 1; }
+.node-card .nc-name { font-weight: 600; color: #fff; }
+.node-card .nc-meta { color: rgba(115,255,185,0.8); font-size: 11px; margin-top: 2px; }
 
 /* ── DOTTED BG ── */
 .dotted {
@@ -750,12 +771,12 @@ footer {
     </a>
     <ul class="nav-links">
       <li><a href="#index">Index</a></li>
-      <li><a href="#arena" class="active">Arena</a></li>
+      <li><a href="#pulse" class="active">Usage Pulse</a></li>
       <li><a href="#observatory">Signals</a></li>
       <li><a href="#finder">AI Finder</a></li>
       <li><a href="#reports">Reports</a></li>
       <li class="keep"><a href="#" class="nav-lang">RU</a></li>
-      <li class="keep"><a href="#arena" class="nav-cta">Enter Arena →</a></li>
+      <li class="keep"><a href="#pulse" class="nav-cta">View Pulse →</a></li>
     </ul>
   </div>
 </nav>
@@ -776,18 +797,19 @@ footer {
     <div class="hero-divider"></div>
 
     <p class="hero-sub">
-      Observe. Compare. Understand AI.<br>
-      Independent observation, evaluation and analysis of artificial intelligence systems.
+      Observe. Analyse. Understand AI.<br>
+      Independent observation and analysis of artificial intelligence systems.
     </p>
 
     <div class="hero-btns">
-      <a href="#index" class="btn-primary">Explore AIscentrats →</a>
+      <a href="#index" class="btn-primary">Explore AI Models →</a>
       <a href="#index" class="btn-ghost">View AIscentra Index <span class="arr">↗</span></a>
     </div>
   </div>
 
-  <div class="hero-right dotted">
+  <div class="hero-right dotted" id="heroRight">
     <canvas id="heroCanvas"></canvas>
+    <div class="node-card" id="nodeCard"></div>
   </div>
 </section>
 
@@ -821,7 +843,7 @@ footer {
     <div class="eco-cards">
       <div class="eco-card">
         <div class="eco-card-tags">
-          <span class="eco-tag">Evaluation</span>
+          <span class="eco-tag">Tracking</span>
           <span class="eco-tag accent">Index</span>
         </div>
         <svg class="eco-icon" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -832,13 +854,13 @@ footer {
           <line x1="32" y1="4" x2="32" y2="60" stroke="rgba(255,255,255,0.08)" stroke-width="1"/>
         </svg>
         <div class="eco-name">AIscentra<br>Index</div>
-        <div class="eco-desc">Measure AI performance through continuous standardized evaluation across 8 categories.</div>
+        <div class="eco-desc">Multi-signal index tracking Popularity, Sentiment, Technical Signal, Activity and Momentum across the AI ecosystem.</div>
         <a href="#index" class="eco-link">Explore Index <span class="arr">↗</span></a>
       </div>
       <div class="eco-card">
         <div class="eco-card-tags">
-          <span class="eco-tag">Comparison</span>
-          <span class="eco-tag accent">Arena</span>
+          <span class="eco-tag">Usage Data</span>
+          <span class="eco-tag accent">Pulse</span>
         </div>
         <svg class="eco-icon" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
           <ellipse cx="32" cy="32" rx="28" ry="14" stroke="rgba(255,255,255,0.15)" stroke-width="1"/>
@@ -846,9 +868,9 @@ footer {
           <ellipse cx="32" cy="32" rx="28" ry="14" stroke="rgba(115,255,185,0.3)" stroke-width="1" transform="rotate(120 32 32)"/>
           <circle cx="32" cy="32" r="3" fill="rgba(115,255,185,0.6)"/>
         </svg>
-        <div class="eco-name">AIscentra<br>Arena</div>
-        <div class="eco-desc">Compare AI models through real-world challenges. Vote, evaluate, influence the Index.</div>
-        <a href="#arena" class="eco-link">Enter Arena <span class="arr">↗</span></a>
+        <div class="eco-name">AIscentra<br>Pulse</div>
+        <div class="eco-desc">Real usage data from the community — how people use AI, for what tasks, and how satisfied they are.</div>
+        <a href="#pulse" class="eco-link">View Pulse <span class="arr">↗</span></a>
       </div>
       <div class="eco-card">
         <div class="eco-card-tags">
@@ -951,31 +973,31 @@ footer {
     <div>
       <div class="section-label">AIscentra Signals</div>
       <h2 class="section-title" style="margin-bottom:32px">Live<br>Observatory</h2>
-      <p style="font-size:16px;color:rgba(255,255,255,0.35);line-height:1.6;margin-bottom:40px;max-width:360px">Real-time activity across the AI ecosystem. Every evaluation. Every shift. Every new AIscentrat.</p>
+      <p style="font-size:16px;color:rgba(255,255,255,0.35);line-height:1.6;margin-bottom:40px;max-width:360px">Real-time activity across the AI ecosystem. Every signal. Every trend. Every shift in the AI ecosystem.</p>
       <div class="obs-feed">
         <div class="obs-row">
           <div class="obs-dot d-up"></div>
-          <div><div class="obs-text"><strong>Claude 3.5 Sonnet</strong> moved up to #1 in Analytics</div><div class="obs-cat">AIscentra Index · Analytics</div></div>
+          <div><div class="obs-text"><strong>Claude 3.5 Sonnet</strong> gained momentum — rising sentiment in Analytics</div><div class="obs-cat">AIscentra Index · Sentiment Signal</div></div>
           <div class="obs-time">2m ago</div>
         </div>
         <div class="obs-row">
           <div class="obs-dot d-new"></div>
-          <div><div class="obs-text"><strong>New AIscentrat:</strong> Qwen 2.5-Max added to evaluation system</div><div class="obs-cat">Observatory · New Entry</div></div>
+          <div><div class="obs-text"><strong>New AIscentrat:</strong> Qwen 2.5-Max added to the observatory</div><div class="obs-cat">Observatory · New Model Tracked</div></div>
           <div class="obs-time">41m ago</div>
         </div>
         <div class="obs-row">
           <div class="obs-dot d-down"></div>
-          <div><div class="obs-text"><strong>GPT-4o</strong> dropped 2 positions in Mathematics after new round</div><div class="obs-cat">AIscentra Index · Mathematics</div></div>
+          <div><div class="obs-text"><strong>GPT-4o</strong> showing declining activity signal in Mathematics category</div><div class="obs-cat">AIscentra Index · Activity Signal</div></div>
           <div class="obs-time">3h ago</div>
         </div>
         <div class="obs-row">
           <div class="obs-dot d-info"></div>
-          <div><div class="obs-text"><strong>Arena challenge launched:</strong> Business Argumentation — 8 AIscentrats competing</div><div class="obs-cat">Arena · Business</div></div>
+          <div><div class="obs-text"><strong>Arena challenge launched:</strong> Business Argumentation — 8 AIscentrats competing</div><div class="obs-cat">Observatory · Usage Trend</div></div>
           <div class="obs-time">5h ago</div>
         </div>
         <div class="obs-row">
           <div class="obs-dot d-up"></div>
-          <div><div class="obs-text"><strong>Gemini 2.0 Flash</strong> set a speed record in Programming — 94.2pts</div><div class="obs-cat">AIscentra Index · Programming</div></div>
+          <div><div class="obs-text"><strong>Gemini 2.0 Flash</strong> strong momentum signal in Programming — high activity index</div><div class="obs-cat">AIscentra Index · Momentum Signal</div></div>
           <div class="obs-time">Yesterday</div>
         </div>
       </div>
@@ -985,37 +1007,37 @@ footer {
       <div class="obs-timeline">
         <div class="tl-item active">
           <div class="tl-date">Today, 14:32</div>
-          <div class="tl-event">Claude 3.5 — Index Update</div>
-          <div class="tl-detail">Analytics category · +3 points</div>
+          <div class="tl-event">Claude 3.5 — Sentiment rise detected</div>
+          <div class="tl-detail">Public sentiment up · Index updated</div>
         </div>
         <div class="tl-item active">
           <div class="tl-date">Today, 13:51</div>
-          <div class="tl-event">New AIscentrat: Qwen 2.5-Max</div>
-          <div class="tl-detail">First evaluation started</div>
+          <div class="tl-event">New model tracked: Qwen 2.5-Max</div>
+          <div class="tl-detail">First signals collected</div>
         </div>
         <div class="tl-item active">
           <div class="tl-date">Today, 11:08</div>
-          <div class="tl-event">GPT-4o — Mathematics drop</div>
-          <div class="tl-detail">−2 positions after AIscentrlum review</div>
+          <div class="tl-event">GPT-4o — Activity signal low</div>
+          <div class="tl-detail">Declining momentum · Index adjusted</div>
         </div>
         <div class="tl-item">
           <div class="tl-date">Today, 09:20</div>
-          <div class="tl-event">Arena challenge: Business</div>
-          <div class="tl-detail">8 models · voting open</div>
+          <div class="tl-event">Usage trend: Business tasks</div>
+          <div class="tl-detail">Growing adoption · tracked</div>
         </div>
         <div class="tl-item">
           <div class="tl-date">Yesterday, 18:45</div>
-          <div class="tl-event">Gemini 2.0 Flash — record</div>
-          <div class="tl-detail">Programming · 94.2 / 100</div>
+          <div class="tl-event">Gemini 2.0 Flash — momentum peak</div>
+          <div class="tl-detail">Programming signal · high activity</div>
         </div>
         <div class="tl-item">
           <div class="tl-date">Yesterday, 15:10</div>
-          <div class="tl-event">Weekly Index recalculated</div>
-          <div class="tl-detail">All 47 AIscentrats updated</div>
+          <div class="tl-event">Weekly Index updated</div>
+          <div class="tl-detail">All 47 tracked models refreshed</div>
         </div>
         <div class="tl-item">
           <div class="tl-date">2 days ago</div>
-          <div class="tl-event">Report published: State of AI</div>
+          <div class="tl-event">Insight published: State of AI</div>
           <div class="tl-detail">June 2026 · Insights</div>
         </div>
       </div>
@@ -1035,113 +1057,193 @@ footer {
     </div>
     <div class="model-cards">
       <div class="model-card">
-        <div class="model-rank">Rank 01 · AIscentrat</div>
+        <div class="model-rank">Tracked Model · 01</div>
         <div class="model-name">Claude 3.5</div>
         <div class="model-maker">Anthropic</div>
         <div class="model-score-num" id="s1">–</div>
-        <div class="model-score-label">AIscentra Score</div>
+        <div class="model-score-label">Observatory Index</div>
         <div class="model-bar-bg"><div class="model-bar-fill" data-w="94"></div></div>
-        <span class="model-change up">▲ +1 this week</span>
-        <div class="model-cat">Best: Analytics</div>
+        <span class="model-change up">▲ Momentum up this week</span>
+        <div class="model-cat">Leading signal: Sentiment</div>
       </div>
       <div class="model-card">
-        <div class="model-rank">Rank 02 · AIscentrat</div>
+        <div class="model-rank">Tracked Model · 02</div>
         <div class="model-name">GPT-4o</div>
         <div class="model-maker">OpenAI</div>
         <div class="model-score-num" id="s2">–</div>
-        <div class="model-score-label">AIscentra Score</div>
+        <div class="model-score-label">Observatory Index</div>
         <div class="model-bar-bg"><div class="model-bar-fill" data-w="91"></div></div>
-        <span class="model-change dn">▼ −2 this week</span>
-        <div class="model-cat">Best: Creativity</div>
+        <span class="model-change dn">▼ Activity down this week</span>
+        <div class="model-cat">Leading signal: Popularity</div>
       </div>
       <div class="model-card">
-        <div class="model-rank">Rank 03 · AIscentrat</div>
+        <div class="model-rank">Tracked Model · 03</div>
         <div class="model-name">Gemini 2.0</div>
         <div class="model-maker">Google</div>
         <div class="model-score-num" id="s3">–</div>
-        <div class="model-score-label">AIscentra Score</div>
+        <div class="model-score-label">Observatory Index</div>
         <div class="model-bar-bg"><div class="model-bar-fill" data-w="89"></div></div>
-        <span class="model-change up">▲ +3 this week</span>
-        <div class="model-cat">Best: Programming</div>
+        <span class="model-change up">▲ Sentiment rising this week</span>
+        <div class="model-cat">Leading signal: Momentum</div>
       </div>
       <div class="model-card">
-        <div class="model-rank">Rank 04 · AIscentrat</div>
+        <div class="model-rank">Tracked Model · 04</div>
         <div class="model-name">Grok 2</div>
         <div class="model-maker">xAI</div>
         <div class="model-score-num" id="s4">–</div>
-        <div class="model-score-label">AIscentra Score</div>
+        <div class="model-score-label">Observatory Index</div>
         <div class="model-bar-bg"><div class="model-bar-fill" data-w="85"></div></div>
-        <span class="model-change nc">— no change</span>
-        <div class="model-cat">Best: Logic</div>
+        <span class="model-change nc">— Stable signal</span>
+        <div class="model-cat">Leading signal: Activity</div>
       </div>
     </div>
   </div>
 </section>
 
-<!-- ARENA -->
-<section class="arena-section" id="arena">
+<!-- AI USAGE PULSE -->
+<section class="arena-section" id="pulse">
   <div class="arena-inner">
     <div class="arena-header">
       <div>
-        <div class="section-label">AIscentra Arena</div>
-        <h2 class="section-title">Live model<br>comparison</h2>
+        <div class="section-label">AIscentra Pulse</div>
+        <h2 class="section-title">How people<br>use AI today</h2>
       </div>
-      <a href="#" class="btn-ghost">Full Arena <span class="arr">↗</span></a>
+      <a href="#" class="btn-ghost">Full Pulse Report <span class="arr">↗</span></a>
     </div>
+
     <div class="arena-question">
-      <strong>Current challenge · Logic</strong>
-      Explain the difference between machine learning and deep learning. Answer clearly, concisely, with a real-world analogy.
+      <strong>Current signal · Usage Trends · Updated weekly</strong>
+      Real usage data collected from the community. Which AI models people use, for what tasks, and how satisfied they are with the results.
     </div>
+
     <div class="arena-cards">
+      <!-- Card 1: Most used models -->
       <div class="arena-card">
         <div class="arena-card-top">
-          <span class="a-model">Claude 3.5</span>
-          <span class="a-score">94.1</span>
+          <span class="a-model">Usage Share</span>
+          <span class="a-score" style="color:var(--mint);font-size:11px;letter-spacing:.05em">LIVE SIGNAL</span>
         </div>
-        <div class="a-text">Machine learning is teaching a system using rules and examples. Deep learning is a subset — it uses neural networks with many layers to form its own rules. Think of it like this: ML is teaching a child explicit rules, deep learning is how the brain builds intuition over thousands of experiences...</div>
-        <div class="a-bar-wrap">
-          <div class="a-bar-label">Relevance</div>
-          <div class="a-bar-bg"><div class="a-bar-fill" data-w="96"></div></div>
+        <div style="display:flex;flex-direction:column;gap:10px;margin-bottom:16px;">
+          <div>
+            <div style="display:flex;justify-content:space-between;margin-bottom:4px;">
+              <span style="font-size:12px;color:rgba(255,255,255,0.5);">ChatGPT / GPT-4o</span>
+              <span style="font-size:12px;font-weight:600;color:var(--frost);">38%</span>
+            </div>
+            <div class="a-bar-bg"><div class="a-bar-fill" data-w="76" style="background:var(--mint)"></div></div>
+          </div>
+          <div>
+            <div style="display:flex;justify-content:space-between;margin-bottom:4px;">
+              <span style="font-size:12px;color:rgba(255,255,255,0.5);">Claude</span>
+              <span style="font-size:12px;font-weight:600;color:var(--frost);">24%</span>
+            </div>
+            <div class="a-bar-bg"><div class="a-bar-fill" data-w="48" style="background:rgba(115,255,185,0.6)"></div></div>
+          </div>
+          <div>
+            <div style="display:flex;justify-content:space-between;margin-bottom:4px;">
+              <span style="font-size:12px;color:rgba(255,255,255,0.5);">Gemini</span>
+              <span style="font-size:12px;font-weight:600;color:var(--frost);">19%</span>
+            </div>
+            <div class="a-bar-bg"><div class="a-bar-fill" data-w="38" style="background:rgba(115,255,185,0.4)"></div></div>
+          </div>
+          <div>
+            <div style="display:flex;justify-content:space-between;margin-bottom:4px;">
+              <span style="font-size:12px;color:rgba(255,255,255,0.5);">Other models</span>
+              <span style="font-size:12px;font-weight:600;color:var(--frost);">19%</span>
+            </div>
+            <div class="a-bar-bg"><div class="a-bar-fill" data-w="38" style="background:rgba(255,255,255,0.15)"></div></div>
+          </div>
         </div>
         <div class="a-footer">
-          <span class="a-votes">2,847 votes</span>
-          <button class="vote-btn" onclick="castVote(this)">Vote</button>
+          <span class="a-votes" style="font-size:11px;">Based on 12,400+ responses</span>
         </div>
       </div>
+
+      <!-- Card 2: Task distribution -->
       <div class="arena-card">
         <div class="arena-card-top">
-          <span class="a-model">GPT-4o</span>
-          <span class="a-score">91.8</span>
+          <span class="a-model">Task Distribution</span>
+          <span class="a-score" style="color:var(--mint);font-size:11px;letter-spacing:.05em">LIVE SIGNAL</span>
         </div>
-        <div class="a-text">ML is the broad field of algorithms that improve from experience. Deep learning uses multi-layered neural networks that mimic the brain. The key difference: architecture depth and the scale of data required. A decision tree is ML; a language model like me is deep learning...</div>
-        <div class="a-bar-wrap">
-          <div class="a-bar-label">Relevance</div>
-          <div class="a-bar-bg"><div class="a-bar-fill" data-w="90"></div></div>
+        <div style="display:flex;flex-direction:column;gap:10px;margin-bottom:16px;">
+          <div>
+            <div style="display:flex;justify-content:space-between;margin-bottom:4px;">
+              <span style="font-size:12px;color:rgba(255,255,255,0.5);">Writing & Content</span>
+              <span style="font-size:12px;font-weight:600;color:var(--frost);">31%</span>
+            </div>
+            <div class="a-bar-bg"><div class="a-bar-fill" data-w="62" style="background:var(--mint)"></div></div>
+          </div>
+          <div>
+            <div style="display:flex;justify-content:space-between;margin-bottom:4px;">
+              <span style="font-size:12px;color:rgba(255,255,255,0.5);">Code & Development</span>
+              <span style="font-size:12px;font-weight:600;color:var(--frost);">27%</span>
+            </div>
+            <div class="a-bar-bg"><div class="a-bar-fill" data-w="54" style="background:rgba(115,255,185,0.6)"></div></div>
+          </div>
+          <div>
+            <div style="display:flex;justify-content:space-between;margin-bottom:4px;">
+              <span style="font-size:12px;color:rgba(255,255,255,0.5);">Research & Analysis</span>
+              <span style="font-size:12px;font-weight:600;color:var(--frost);">22%</span>
+            </div>
+            <div class="a-bar-bg"><div class="a-bar-fill" data-w="44" style="background:rgba(115,255,185,0.4)"></div></div>
+          </div>
+          <div>
+            <div style="display:flex;justify-content:space-between;margin-bottom:4px;">
+              <span style="font-size:12px;color:rgba(255,255,255,0.5);">Business & Strategy</span>
+              <span style="font-size:12px;font-weight:600;color:var(--frost);">20%</span>
+            </div>
+            <div class="a-bar-bg"><div class="a-bar-fill" data-w="40" style="background:rgba(255,255,255,0.15)"></div></div>
+          </div>
         </div>
         <div class="a-footer">
-          <span class="a-votes">2,311 votes</span>
-          <button class="vote-btn" onclick="castVote(this)">Vote</button>
+          <span class="a-votes" style="font-size:11px;">Across all tracked models</span>
         </div>
       </div>
+
+      <!-- Card 3: Satisfaction -->
       <div class="arena-card">
         <div class="arena-card-top">
-          <span class="a-model">Gemini 2.0</span>
-          <span class="a-score">89.4</span>
+          <span class="a-model">Satisfaction Signal</span>
+          <span class="a-score" style="color:var(--mint);font-size:11px;letter-spacing:.05em">LIVE SIGNAL</span>
         </div>
-        <div class="a-text">Imagine ML as a set of mail-sorting rules. Deep learning is when the system invents its own rules by looking at millions of examples. The difference is abstraction: ML needs a human to define features, deep learning extracts them automatically from raw data...</div>
-        <div class="a-bar-wrap">
-          <div class="a-bar-label">Relevance</div>
-          <div class="a-bar-bg"><div class="a-bar-fill" data-w="86"></div></div>
+        <div style="display:flex;flex-direction:column;gap:10px;margin-bottom:16px;">
+          <div>
+            <div style="display:flex;justify-content:space-between;margin-bottom:4px;">
+              <span style="font-size:12px;color:rgba(255,255,255,0.5);">Very satisfied</span>
+              <span style="font-size:12px;font-weight:600;color:var(--frost);">44%</span>
+            </div>
+            <div class="a-bar-bg"><div class="a-bar-fill" data-w="88" style="background:var(--mint)"></div></div>
+          </div>
+          <div>
+            <div style="display:flex;justify-content:space-between;margin-bottom:4px;">
+              <span style="font-size:12px;color:rgba(255,255,255,0.5);">Satisfied</span>
+              <span style="font-size:12px;font-weight:600;color:var(--frost);">33%</span>
+            </div>
+            <div class="a-bar-bg"><div class="a-bar-fill" data-w="66" style="background:rgba(115,255,185,0.6)"></div></div>
+          </div>
+          <div>
+            <div style="display:flex;justify-content:space-between;margin-bottom:4px;">
+              <span style="font-size:12px;color:rgba(255,255,255,0.5);">Neutral</span>
+              <span style="font-size:12px;font-weight:600;color:var(--frost);">15%</span>
+            </div>
+            <div class="a-bar-bg"><div class="a-bar-fill" data-w="30" style="background:rgba(255,255,255,0.15)"></div></div>
+          </div>
+          <div>
+            <div style="display:flex;justify-content:space-between;margin-bottom:4px;">
+              <span style="font-size:12px;color:rgba(255,255,255,0.5);">Not satisfied</span>
+              <span style="font-size:12px;font-weight:600;color:var(--frost);">8%</span>
+            </div>
+            <div class="a-bar-bg"><div class="a-bar-fill" data-w="16" style="background:rgba(249,112,102,0.4)"></div></div>
+          </div>
         </div>
         <div class="a-footer">
-          <span class="a-votes">1,994 votes</span>
-          <button class="vote-btn" onclick="castVote(this)">Vote</button>
+          <span class="a-votes" style="font-size:11px;">Overall user satisfaction index</span>
         </div>
       </div>
     </div>
+
     <div class="arena-cta">
-      <a href="#" class="btn-primary">Enter Arena →</a>
-      <span class="arena-note">Your vote influences the AIscentra Index</span>
+      <a href="#poll" class="btn-primary">Share your usage →</a>
+      <span class="arena-note">Your data contributes to the AIscentra Pulse Signal</span>
     </div>
   </div>
 </section>
@@ -1170,6 +1272,14 @@ footer {
   </div>
 </section>
 
+<!-- WHITE BLOCK 1 — POLL -->
+<section id="poll" style="background:#ffffff;padding:100px 40px;border-top:1px solid #e5e7eb;border-bottom:1px solid #e5e7eb;">
+  <div style="max-width:1200px;margin:0 auto;">
+    <div style="font-size:11px;font-weight:500;letter-spacing:.08em;text-transform:uppercase;color:#030303;opacity:0.35;margin-bottom:16px;">AIscentra Poll</div>
+    <h2 style="font-size:clamp(36px,4vw,54px);font-weight:700;letter-spacing:-0.032em;line-height:1;color:#030303;margin-bottom:0;">Community<br>Vote</h2>
+  </div>
+</section>
+
 <!-- REPORTS -->
 <section class="reports-section" id="reports">
   <div class="reports-inner">
@@ -1192,7 +1302,7 @@ footer {
         <div class="report-tag">Comparison</div>
         <div class="report-num">002</div>
         <div class="report-title">Claude vs GPT — Deep Analysis</div>
-        <div class="report-desc">Head-to-head across all 8 evaluation categories with raw data.</div>
+        <div class="report-desc">Side-by-side signal comparison across 8 tracked categories.</div>
         <a href="#" class="report-link">Read Report <span class="a">↗</span></a>
       </div>
       <div class="report-card">
@@ -1251,25 +1361,33 @@ footer {
 <!-- ABOUT -->
 <section class="about-section">
   <div class="about-inner">
-    <div class="section-label">The AIscentra Glossary</div>
+    <div class="section-label">How AIscentra Works</div>
     <h2 class="section-title" style="margin-bottom:48px">Understanding<br>the Observatory</h2>
     <div class="about-cards">
       <div class="about-card">
-        <div class="about-term">AIscentrat</div>
-        <div class="about-role">Participant</div>
-        <div class="about-desc">Any AI model connected to the AIscentra evaluation system. GPT, Claude, Gemini, Grok, Mistral — all of them are AIscentrats.</div>
-      </div>
-      <div class="about-card">
-        <div class="about-term">AIscentrlum</div>
-        <div class="about-role">Evaluator</div>
-        <div class="about-desc">An independent AI arbitrator that assesses responses from AIscentrats using 6 criteria: accuracy, logic, completeness, reliability, argumentation, and practical applicability.</div>
-      </div>
-      <div class="about-card">
         <div class="about-term">AIscentra Index</div>
-        <div class="about-role">The Score</div>
-        <div class="about-desc">The central performance metric of the platform. A composite score reflecting a model's real capabilities based on all accumulated evaluation results across all categories.</div>
+        <div class="about-role">The Signal</div>
+        <div class="about-desc">A multi-component index tracking Popularity, Sentiment, Technical Signal, Activity and Momentum. Not a single intelligence score — a real map of ecosystem dynamics.</div>
+      </div>
+      <div class="about-card">
+        <div class="about-term">Observatory</div>
+        <div class="about-role">The System</div>
+        <div class="about-desc">AIscentra collects open signals from across the internet — news, releases, discussions, reviews — and turns them into structured, transparent insights about the AI landscape.</div>
+      </div>
+      <div class="about-card">
+        <div class="about-term">AI Usage Pulse</div>
+        <div class="about-role">The Community Signal</div>
+        <div class="about-desc">Real data from real users — which AI models people use, for what tasks, and how satisfied they are. Not a ranking of who wins. A map of how AI is actually being used.</div>
       </div>
     </div>
+  </div>
+</section>
+
+<!-- WHITE BLOCK 2 — NEWS -->
+<section id="news" style="background:#ffffff;padding:100px 40px;border-top:1px solid #e5e7eb;border-bottom:1px solid #e5e7eb;">
+  <div style="max-width:1200px;margin:0 auto;">
+    <div style="font-size:11px;font-weight:500;letter-spacing:.08em;text-transform:uppercase;color:#030303;opacity:0.35;margin-bottom:16px;">AIscentra Insights</div>
+    <h2 style="font-size:clamp(36px,4vw,54px);font-weight:700;letter-spacing:-0.032em;line-height:1;color:#030303;margin-bottom:0;">Latest<br>News</h2>
   </div>
 </section>
 
@@ -1286,7 +1404,7 @@ footer {
         </svg>
         AIscentra
       </div>
-      <div class="footer-brand-sub">Independent observation, evaluation and analysis of artificial intelligence systems. Not affiliated with any AI company.</div>
+      <div class="footer-brand-sub">Independent observation and analysis of artificial intelligence systems. Not affiliated with any AI company.</div>
       <div style="display:flex;gap:16px;margin-top:20px">
         <a href="#" style="font-size:12px;color:rgba(255,255,255,0.25);text-decoration:none;border:1px solid rgba(255,255,255,0.1);padding:6px 14px;border-radius:9999px;">Telegram ↗</a>
         <a href="#" style="font-size:12px;color:rgba(255,255,255,0.25);text-decoration:none;border:1px solid rgba(255,255,255,0.1);padding:6px 14px;border-radius:9999px;">Twitter ↗</a>
@@ -1296,7 +1414,7 @@ footer {
       <div class="footer-links-col">
         <h4>Platform</h4>
         <a href="#">AIscentra Index</a>
-        <a href="#">Arena</a>
+        <a href="#">Usage Pulse</a>
         <a href="#">AI Guide / Finder</a>
         <a href="#">Signals</a>
       </div>
@@ -1310,7 +1428,7 @@ footer {
       <div class="footer-links-col">
         <h4>About</h4>
         <a href="#">Methodology</a>
-        <a href="#">AIscentrlum</a>
+        <a href="#">Methodology</a>
         <a href="#">API Access</a>
         <a href="#">Premium</a>
       </div>
@@ -1328,67 +1446,228 @@ footer {
 </footer>
 
 <script>
-/* ── HERO CANVAS — Wireframe Network ── */
-const canvas = document.getElementById('heroCanvas');
-const ctx = canvas.getContext('2d');
-let W, H, nodes=[], animId;
+/* ── HERO OBSERVATORY — Signal Field (MVP spec) ── */
+(function(){
+  const canvas = document.getElementById('heroCanvas');
+  const heroRight = document.getElementById('heroRight');
+  const card = document.getElementById('nodeCard');
+  if(!canvas || !heroRight) return;
+  const ctx = canvas.getContext('2d');
 
-function resize(){
-  W = canvas.width = canvas.offsetWidth;
-  H = canvas.height = canvas.offsetHeight;
-}
-resize();
-window.addEventListener('resize', resize);
+  // ── Fixed parameters (per spec) ──
+  const NODE_COUNT = 38;
+  const LINK_DIST = 130;
+  const HOVER_RADIUS = 18;
+  const FOLLOW_COEF = 0.02;
+  const MAX_OFFSET = 25;
+  const MINT_RATIO = 0.15;
+  const FADE_SCROLL_END = 600;
+  const MAX_TILT_DEG = 3;
 
-class Node {
-  constructor(){
-    this.x = Math.random()*W;
-    this.y = Math.random()*H;
-    this.vx = (Math.random()-.5)*0.4;
-    this.vy = (Math.random()-.5)*0.4;
-    this.r = Math.random()*2+1;
-    this.mint = Math.random()<0.15;
+  const MODEL_NAMES = ['Claude 3.5','GPT-4o','Gemini 2.0','Grok 2','Mistral L2','LLaMA 3.1','DeepSeek V3','Qwen 2.5','Phi-4','Command R+'];
+  const SIGNAL_TYPES = ['Sentiment rising','Activity steady','Momentum up','New signal','Tracked'];
+
+  let W, H, nodes = [];
+  let mouse = { x: null, y: null };
+  let hoveredNode = null;
+  let focusedNode = null;
+  let rafId = null;
+  let running = false;
+
+  function resize(){
+    W = canvas.width = canvas.offsetWidth;
+    H = canvas.height = canvas.offsetHeight;
   }
-  update(){
-    this.x+=this.vx; this.y+=this.vy;
-    if(this.x<0||this.x>W) this.vx*=-1;
-    if(this.y<0||this.y>H) this.vy*=-1;
-  }
-}
+  resize();
+  window.addEventListener('resize', resize);
 
-for(let i=0;i<60;i++) nodes.push(new Node());
+  function rand(a,b){ return a + Math.random()*(b-a); }
 
-function draw(){
-  ctx.clearRect(0,0,W,H);
-  // connections
-  for(let i=0;i<nodes.length;i++){
-    for(let j=i+1;j<nodes.length;j++){
-      const dx=nodes[i].x-nodes[j].x, dy=nodes[i].y-nodes[j].y;
-      const d=Math.sqrt(dx*dx+dy*dy);
-      if(d<120){
-        const alpha=(1-d/120)*0.25;
-        ctx.beginPath();
-        ctx.moveTo(nodes[i].x,nodes[i].y);
-        ctx.lineTo(nodes[j].x,nodes[j].y);
-        ctx.strokeStyle = nodes[i].mint||nodes[j].mint
-          ? `rgba(115,255,185,${alpha})`
-          : `rgba(255,255,255,${alpha*0.5})`;
-        ctx.lineWidth=0.8;
-        ctx.stroke();
-      }
+  function initNodes(){
+    nodes = [];
+    for(let i=0;i<NODE_COUNT;i++){
+      const baseX = rand(0,W), baseY = rand(0,H);
+      nodes.push({
+        baseX, baseY,
+        x: baseX, y: baseY,
+        vx: rand(-0.15,0.15),
+        vy: rand(-0.15,0.15),
+        r: rand(1.5,3),
+        mint: Math.random() < MINT_RATIO,
+        name: MODEL_NAMES[i % MODEL_NAMES.length],
+        signal: SIGNAL_TYPES[i % SIGNAL_TYPES.length],
+        index: (Math.random()*30+65).toFixed(1)
+      });
     }
   }
-  // nodes
-  nodes.forEach(n=>{
-    ctx.beginPath();
-    ctx.arc(n.x,n.y,n.r,0,Math.PI*2);
-    ctx.fillStyle = n.mint ? 'rgba(115,255,185,0.8)' : 'rgba(255,255,255,0.3)';
-    ctx.fill();
-    n.update();
+  initNodes();
+
+  function bounce(n){
+    if(n.baseX < 0 || n.baseX > W) n.vx *= -1;
+    if(n.baseY < 0 || n.baseY > H) n.vy *= -1;
+    n.baseX = Math.max(0, Math.min(W, n.baseX));
+    n.baseY = Math.max(0, Math.min(H, n.baseY));
+  }
+
+  function update(){
+    nodes.forEach(n=>{
+      // organic drift (breathing)
+      n.baseX += n.vx;
+      n.baseY += n.vy;
+      bounce(n);
+
+      // mouse-follow with lag, clamped to MAX_OFFSET
+      if(mouse.x !== null){
+        const dx = mouse.x - n.baseX, dy = mouse.y - n.baseY;
+        const dist = Math.hypot(dx,dy);
+        const pull = Math.min(dist * FOLLOW_COEF, MAX_OFFSET);
+        const angle = Math.atan2(dy,dx);
+        n.x = n.baseX + Math.cos(angle)*pull;
+        n.y = n.baseY + Math.sin(angle)*pull;
+      } else {
+        n.x = n.baseX; n.y = n.baseY;
+      }
+    });
+
+    // hover detection — once per frame
+    hoveredNode = null;
+    if(mouse.x !== null){
+      let minDist = HOVER_RADIUS;
+      nodes.forEach(n=>{
+        const d = Math.hypot(n.x-mouse.x, n.y-mouse.y);
+        if(d < minDist){ minDist = d; hoveredNode = n; }
+      });
+    }
+  }
+
+  function draw(){
+    ctx.clearRect(0,0,W,H);
+
+    // links — only pairs under LINK_DIST
+    for(let i=0;i<nodes.length;i++){
+      for(let j=i+1;j<nodes.length;j++){
+        const a = nodes[i], b = nodes[j];
+        const d = Math.hypot(a.x-b.x, a.y-b.y);
+        if(d < LINK_DIST){
+          const isHoverLinked = hoveredNode && (a===hoveredNode || b===hoveredNode);
+          let alpha = (1 - d/LINK_DIST) * 0.25;
+          if(isHoverLinked) alpha = 0.6;
+          if(focusedNode && a!==focusedNode && b!==focusedNode) alpha *= 0.3;
+
+          ctx.beginPath();
+          ctx.moveTo(a.x,a.y);
+          ctx.lineTo(b.x,b.y);
+          ctx.strokeStyle = (a.mint||b.mint)
+            ? `rgba(115,255,185,${alpha})`
+            : `rgba(255,255,255,${alpha*0.5})`;
+          ctx.lineWidth = isHoverLinked ? 1.1 : 0.8;
+          ctx.stroke();
+        }
+      }
+    }
+
+    // nodes
+    nodes.forEach(n=>{
+      const isHovered = n === hoveredNode;
+      const isFocused = n === focusedNode;
+      let r = n.r;
+      let alpha = n.mint ? 0.8 : 0.3;
+
+      if(isHovered){ r = n.r * 2; }
+      if(focusedNode && !isFocused){ alpha *= 0.3; }
+      if(isFocused){ alpha = 1; r = n.r * 2.2; }
+
+      // glow ring for hovered/focused
+      if(isHovered || isFocused){
+        ctx.beginPath();
+        ctx.arc(n.x, n.y, r*3, 0, Math.PI*2);
+        ctx.fillStyle = 'rgba(115,255,185,0.08)';
+        ctx.fill();
+      }
+
+      ctx.beginPath();
+      ctx.arc(n.x, n.y, r, 0, Math.PI*2);
+      ctx.fillStyle = n.mint
+        ? `rgba(115,255,185,${alpha})`
+        : `rgba(255,255,255,${alpha})`;
+      ctx.fill();
+    });
+
+    // node card (hover tooltip)
+    if(hoveredNode){
+      card.innerHTML = `<div class="nc-name">${hoveredNode.name}</div><div class="nc-meta">Index ${hoveredNode.index} · ${hoveredNode.signal}</div>`;
+      card.style.left = (hoveredNode.x + 14) + 'px';
+      card.style.top = (hoveredNode.y - 8) + 'px';
+      card.classList.add('show');
+    } else {
+      card.classList.remove('show');
+    }
+  }
+
+  function loop(){
+    if(!running) return;
+    update();
+    draw();
+    rafId = requestAnimationFrame(loop);
+  }
+  function start(){
+    if(running) return;
+    running = true;
+    loop();
+  }
+  function stop(){
+    running = false;
+    if(rafId) cancelAnimationFrame(rafId);
+  }
+  start();
+
+  // ── Mouse tracking (canvas-local coords) ──
+  heroRight.addEventListener('mousemove', e=>{
+    const rect = canvas.getBoundingClientRect();
+    mouse.x = e.clientX - rect.left;
+    mouse.y = e.clientY - rect.top;
+
+    // tilt — max 3deg, based on cursor position relative to center
+    const cx = rect.width/2, cy = rect.height/2;
+    const dx = (mouse.x - cx) / cx;
+    const dy = (mouse.y - cy) / cy;
+    heroRight.style.transform = `rotateY(${dx*MAX_TILT_DEG}deg) rotateX(${-dy*MAX_TILT_DEG}deg)`;
   });
-  animId = requestAnimationFrame(draw);
-}
-draw();
+  heroRight.addEventListener('mouseleave', ()=>{
+    mouse.x = null; mouse.y = null;
+    heroRight.style.transform = 'rotateY(0deg) rotateX(0deg)';
+  });
+
+  // ── Click — focus / diaphragm effect ──
+  heroRight.addEventListener('click', ()=>{
+    if(hoveredNode){
+      focusedNode = (focusedNode === hoveredNode) ? null : hoveredNode;
+    } else {
+      focusedNode = null;
+    }
+  });
+
+  // ── Scroll-driven fade + scale, stop loop past threshold ──
+  window.addEventListener('scroll', ()=>{
+    const y = window.scrollY;
+    if(y > FADE_SCROLL_END){
+      heroRight.style.display = 'none';
+      stop();
+      return;
+    }
+    heroRight.style.display = 'flex';
+    if(!running) start();
+    const progress = y / FADE_SCROLL_END;
+    canvas.style.opacity = 1 - progress;
+    canvas.style.transform = `scale(${1 + progress*0.08})`;
+  });
+
+  // ── Pause when tab hidden ──
+  document.addEventListener('visibilitychange', ()=>{
+    if(document.hidden) stop();
+    else if(window.scrollY <= FADE_SCROLL_END) start();
+  });
+})();
 
 /* ── SCORE COUNTER ANIMATION ── */
 function countUp(el, target, suffix=''){
@@ -1430,14 +1709,7 @@ const arenaSec = document.querySelector('.arena-section');
 if(arenaSec) arenaIO.observe(arenaSec);
 
 /* ── VOTE ── */
-let voted=false;
-function castVote(btn){
-  if(voted) return;
-  voted=true;
-  btn.textContent='✓ Voted';
-  btn.classList.add('voted');
-  document.querySelectorAll('.vote-btn').forEach(b=>{if(b!==btn)b.disabled=true;});
-}
+/* ── PULSE BARS ANIMATION ── */
 
 /* ── FINDER ── */
 const answers = {
@@ -1458,7 +1730,7 @@ function runFinder(){
     txt.innerHTML = answers[match];
     res.classList.add('show');
   } else {
-    txt.innerHTML = 'Based on your query, we recommend exploring the <strong>AIscentra Index</strong> filtered by your use case. The Guide will match you with the top-performing AIscentrat for your specific need.';
+    txt.innerHTML = 'Based on your query, we recommend exploring the <strong>AIscentra Index</strong> filtered by your use case. The Guide will match you with the most relevant tracked model for your specific need.';
     res.classList.add('show');
   }
 }
