@@ -176,14 +176,11 @@ nav {
 .btn-ghost .arr { color: var(--mint); }
 .btn-ghost:hover { color: var(--frost); }
 
-/* Hero right — wireframe viz */
+/* Hero right — video container */
 .hero-right {
   height: 100vh; position: relative;
   display: flex; align-items: center; justify-content: center;
   overflow: hidden;
-  transform-style: preserve-3d;
-  transition: transform 0.3s ease-out;
-  will-change: transform, opacity;
 }
 .hero-right::before {
   content: '';
@@ -191,28 +188,6 @@ nav {
   background-image:
     radial-gradient(circle at 50% 50%, rgba(115,255,185,0.04) 0%, transparent 70%);
 }
-canvas#heroCanvas {
-  position: absolute; inset: 0;
-  width: 100%; height: 100%;
-}
-.node-card {
-  position: absolute;
-  background: rgba(3,3,3,0.92);
-  border: 1px solid rgba(115,255,185,0.25);
-  padding: 10px 14px;
-  font-size: 12px;
-  line-height: 1.5;
-  color: rgba(255,255,255,0.85);
-  pointer-events: none;
-  opacity: 0;
-  transition: opacity 0.12s ease;
-  white-space: nowrap;
-  z-index: 5;
-  backdrop-filter: blur(6px);
-}
-.node-card.show { opacity: 1; }
-.node-card .nc-name { font-weight: 600; color: #fff; }
-.node-card .nc-meta { color: rgba(115,255,185,0.8); font-size: 11px; margin-top: 2px; }
 
 /* ── DOTTED BG ── */
 .dotted {
@@ -784,11 +759,7 @@ footer {
 <!-- HERO -->
 <section class="hero">
   <div class="hero-left">
-    <div class="hero-tag" style="background:#ff0000;color:#fff;border-color:#ff0000;">
-    <span class="live-dot"></span>
-    DEPLOY TEST MARKER — 17:JUN — IF YOU SEE THIS RED BADGE, DEPLOYMENT IS WORKING
-  </div>
-  <div class="hero-tag">
+    <div class="hero-tag">
       <span class="live-dot"></span>
       Live Observatory Active
     </div>
@@ -811,9 +782,11 @@ footer {
     </div>
   </div>
 
-  <div class="hero-right dotted" id="heroRight">
-    <canvas id="heroCanvas"></canvas>
-    <div class="node-card" id="nodeCard"></div>
+  <div class="hero-right" id="heroRight">
+    <!-- VIDEO PLACEHOLDER — insert AI video here -->
+    <div id="heroVideoSlot" style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;color:rgba(255,255,255,0.15);font-size:13px;letter-spacing:.05em;">
+      Video slot
+    </div>
   </div>
 </section>
 
@@ -1278,11 +1251,94 @@ footer {
 
 <!-- WHITE BLOCK 1 — POLL -->
 <section id="poll" style="background:#ffffff;padding:100px 40px;border-top:1px solid #e5e7eb;border-bottom:1px solid #e5e7eb;">
-  <div style="max-width:1200px;margin:0 auto;">
-    <div style="font-size:11px;font-weight:500;letter-spacing:.08em;text-transform:uppercase;color:#030303;opacity:0.35;margin-bottom:16px;">AIscentra Poll</div>
-    <h2 style="font-size:clamp(36px,4vw,54px);font-weight:700;letter-spacing:-0.032em;line-height:1;color:#030303;margin-bottom:0;">Community<br>Vote</h2>
+  <div style="max-width:680px;margin:0 auto;">
+
+    <div style="text-align:center;margin-bottom:48px;">
+      <div style="font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:#039855;margin-bottom:16px;">AIscentra Poll</div>
+      <h2 style="font-size:clamp(32px,4vw,46px);font-weight:700;letter-spacing:-0.03em;line-height:1.05;color:#030303;">Tell us how<br>you use AI</h2>
+    </div>
+
+    <!-- progress dots -->
+    <div id="pollProgress" style="display:flex;justify-content:center;gap:8px;margin-bottom:40px;">
+      <div class="poll-dot" data-step="1"></div>
+      <div class="poll-dot" data-step="2"></div>
+      <div class="poll-dot" data-step="3"></div>
+      <div class="poll-dot" data-step="4"></div>
+      <div class="poll-dot" data-step="5"></div>
+    </div>
+
+    <!-- poll card -->
+    <div id="pollCard" style="background:#f8f8f8;border:1px solid #e5e7eb;border-radius:4px;padding:48px 40px;min-height:280px;display:flex;flex-direction:column;justify-content:center;">
+      <!-- populated by JS -->
+    </div>
+
+    <div id="pollFootnote" style="text-align:center;margin-top:20px;font-size:12px;color:#999;min-height:16px;"></div>
+
   </div>
 </section>
+
+<style>
+.poll-dot {
+  width: 8px; height: 8px; border-radius: 50%;
+  background: #e0e0e0; transition: all 0.3s ease;
+}
+.poll-dot.done { background: #73ffb9; }
+.poll-dot.active { background: #030303; transform: scale(1.3); }
+
+.poll-q-label {
+  font-size: 11px; font-weight: 600; letter-spacing: .07em;
+  text-transform: uppercase; color: #999; margin-bottom: 14px;
+}
+.poll-q-title {
+  font-size: 24px; font-weight: 700; letter-spacing: -0.02em;
+  color: #030303; line-height: 1.25; margin-bottom: 28px;
+}
+.poll-options { display: flex; flex-direction: column; gap: 10px; }
+.poll-opt {
+  display: flex; align-items: center; gap: 12px;
+  background: #fff; border: 1px solid #e0e0e0; border-radius: 4px;
+  padding: 14px 18px; cursor: pointer; transition: all 0.15s;
+  font-size: 15px; font-weight: 500; color: #030303;
+  text-align: left;
+}
+.poll-opt:hover { border-color: #73ffb9; background: #f4fff9; }
+.poll-opt.selected { border-color: #030303; background: #030303; color: #fff; }
+.poll-opt .check {
+  width: 18px; height: 18px; border-radius: 4px;
+  border: 1.5px solid #ccc; flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 11px; transition: all 0.15s;
+}
+.poll-opt.selected .check { background: #73ffb9; border-color: #73ffb9; color: #030303; }
+.poll-opt.single .check { border-radius: 50%; }
+
+.poll-actions { display: flex; justify-content: space-between; align-items: center; margin-top: 28px; }
+.poll-btn-next {
+  font-size: 14px; font-weight: 600; color: #fff; background: #030303;
+  border: none; padding: 11px 26px; border-radius: 9999px;
+  cursor: pointer; transition: opacity 0.15s;
+}
+.poll-btn-next:disabled { opacity: 0.25; cursor: not-allowed; }
+.poll-btn-next:not(:disabled):hover { opacity: 0.85; }
+.poll-btn-back {
+  font-size: 13px; font-weight: 500; color: #999; background: none;
+  border: none; cursor: pointer; transition: color 0.15s;
+}
+.poll-btn-back:hover { color: #030303; }
+
+.poll-result-icon {
+  width: 48px; height: 48px; border-radius: 50%;
+  background: #73ffb9; display: flex; align-items: center; justify-content: center;
+  margin: 0 auto 20px; font-size: 22px;
+}
+.poll-result-text {
+  font-size: 16px; line-height: 1.6; color: #444; text-align: center;
+  max-width: 480px; margin: 0 auto;
+}
+.poll-result-note {
+  font-size: 13px; color: #999; text-align: center; margin-top: 20px; line-height: 1.5;
+}
+</style>
 
 <!-- REPORTS -->
 <section class="reports-section" id="reports">
@@ -1387,13 +1443,143 @@ footer {
   </div>
 </section>
 
-<!-- WHITE BLOCK 2 — NEWS -->
-<section id="news" style="background:#ffffff;padding:100px 40px;border-top:1px solid #e5e7eb;border-bottom:1px solid #e5e7eb;">
+<!-- WHITE BLOCK 2 — NEWS / INSIGHTS -->
+<section id="news" style="background:#030303;padding:80px 40px;border-top:1px solid rgba(255,255,255,0.06);border-bottom:1px solid rgba(255,255,255,0.06);">
   <div style="max-width:1200px;margin:0 auto;">
-    <div style="font-size:11px;font-weight:500;letter-spacing:.08em;text-transform:uppercase;color:#030303;opacity:0.35;margin-bottom:16px;">AIscentra Insights</div>
-    <h2 style="font-size:clamp(36px,4vw,54px);font-weight:700;letter-spacing:-0.032em;line-height:1;color:#030303;margin-bottom:0;">Latest<br>News</h2>
+
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:40px;">
+      <div style="font-size:13px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--mint);">AIscentra Insights</div>
+      <a href="#" class="btn-ghost" style="font-size:13px;">View all insights <span class="arr">↗</span></a>
+    </div>
+
+    <div style="display:grid;grid-template-columns:140px 1fr;gap:0;">
+
+      <!-- TIMELINE COLUMN -->
+      <div style="position:relative;padding-right:24px;">
+        <div style="position:absolute;left:5px;top:6px;bottom:6px;width:1px;background:rgba(255,255,255,0.1);"></div>
+
+        <div style="position:relative;padding-bottom:54px;">
+          <div style="position:absolute;left:0;top:4px;width:10px;height:10px;border-radius:50%;background:var(--mint);box-shadow:0 0 8px rgba(115,255,185,0.5);"></div>
+          <div style="padding-left:24px;">
+            <div style="font-size:13px;font-weight:500;color:rgba(255,255,255,0.7);">May 26, 2025</div>
+            <div style="font-size:11px;color:rgba(255,255,255,0.25);margin-top:2px;">5 min read</div>
+          </div>
+        </div>
+
+        <div style="position:relative;padding-bottom:54px;">
+          <div style="position:absolute;left:0;top:4px;width:10px;height:10px;border-radius:50%;background:#ff8a4c;"></div>
+          <div style="padding-left:24px;">
+            <div style="font-size:13px;font-weight:500;color:rgba(255,255,255,0.7);">May 25, 2025</div>
+            <div style="font-size:11px;color:rgba(255,255,255,0.25);margin-top:2px;">6 min read</div>
+          </div>
+        </div>
+
+        <div style="position:relative;padding-bottom:54px;">
+          <div style="position:absolute;left:0;top:4px;width:10px;height:10px;border-radius:50%;background:#60a5fa;"></div>
+          <div style="padding-left:24px;">
+            <div style="font-size:13px;font-weight:500;color:rgba(255,255,255,0.7);">May 24, 2025</div>
+            <div style="font-size:11px;color:rgba(255,255,255,0.25);margin-top:2px;">4 min read</div>
+          </div>
+        </div>
+
+        <div style="position:relative;">
+          <div style="position:absolute;left:0;top:4px;width:10px;height:10px;border-radius:50%;background:#a78bfa;"></div>
+          <div style="padding-left:24px;">
+            <div style="font-size:13px;font-weight:500;color:rgba(255,255,255,0.7);">May 23, 2025</div>
+            <div style="font-size:11px;color:rgba(255,255,255,0.25);margin-top:2px;">3 min read</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- NEWS CARDS COLUMN -->
+      <div style="background:#f4f4f4;border-radius:4px;overflow:hidden;">
+
+        <!-- Card 1 -->
+        <a href="#" class="news-row" style="display:grid;grid-template-columns:1fr 220px;gap:24px;align-items:center;padding:28px 32px;border-bottom:1px solid #e5e7eb;text-decoration:none;">
+          <div>
+            <div style="font-size:11px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:#039855;margin-bottom:8px;">Model Release</div>
+            <div style="font-size:22px;font-weight:700;letter-spacing:-0.02em;color:#030303;margin-bottom:8px;">GPT-5.5 Released</div>
+            <div style="font-size:14px;line-height:1.5;color:#666;">Major reasoning upgrade and coding improvements with extended context.</div>
+          </div>
+          <div style="height:90px;border-radius:6px;background:linear-gradient(135deg,#e8e8e8,#d4d4d8);display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;">
+            <svg width="100" height="60" viewBox="0 0 100 60" fill="none">
+              <circle cx="50" cy="30" r="22" stroke="#999" stroke-width="0.8" opacity="0.5"/>
+              <circle cx="50" cy="30" r="14" stroke="#73ffb9" stroke-width="1" opacity="0.7"/>
+              <path d="M30 45 L40 35 L50 40 L62 22 L72 28" stroke="#73ffb9" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+              <circle cx="72" cy="28" r="2" fill="#73ffb9"/>
+            </svg>
+          </div>
+        </a>
+
+        <!-- Card 2 -->
+        <a href="#" class="news-row" style="display:grid;grid-template-columns:1fr 220px;gap:24px;align-items:center;padding:28px 32px;border-bottom:1px solid #e5e7eb;text-decoration:none;">
+          <div>
+            <div style="font-size:11px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:#c2410c;margin-bottom:8px;">Coding Agents</div>
+            <div style="font-size:22px;font-weight:700;letter-spacing:-0.02em;color:#030303;margin-bottom:8px;">MiMo Code Agent Now Available</div>
+            <div style="font-size:14px;line-height:1.5;color:#666;">A new coding model with enhanced reasoning and autonomous workflows.</div>
+          </div>
+          <div style="height:90px;border-radius:6px;background:linear-gradient(135deg,#e8e8e8,#d4d4d8);display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;">
+            <svg width="100" height="60" viewBox="0 0 100 60" fill="none">
+              <text x="50" y="38" font-family="monospace" font-size="20" fill="#999" text-anchor="middle">&lt;/&gt;</text>
+              <circle cx="78" cy="20" r="3" stroke="#ff8a4c" stroke-width="1.2" fill="none"/>
+              <line x1="78" y1="26" x2="78" y2="34" stroke="#ff8a4c" stroke-width="1"/>
+            </svg>
+          </div>
+        </a>
+
+        <!-- Card 3 -->
+        <a href="#" class="news-row" style="display:grid;grid-template-columns:1fr 220px;gap:24px;align-items:center;padding:28px 32px;border-bottom:1px solid #e5e7eb;text-decoration:none;">
+          <div>
+            <div style="font-size:11px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:#039855;margin-bottom:8px;">Model Release</div>
+            <div style="font-size:22px;font-weight:700;letter-spacing:-0.02em;color:#030303;margin-bottom:8px;">Xiaomi Unveils MiMo-V2 Family of Models</div>
+            <div style="font-size:14px;line-height:1.5;color:#666;">MiMo-V2-Pro, MiMo-V2-Omni and MiMo-V2-TTS introduce advanced reasoning and multimodal capabilities for the Xiaomi ecosystem.</div>
+          </div>
+          <div style="height:90px;border-radius:6px;background:linear-gradient(135deg,#e8e8e8,#d4d4d8);display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;">
+            <svg width="100" height="60" viewBox="0 0 100 60" fill="none">
+              <rect x="35" y="14" width="14" height="32" rx="3" stroke="#999" stroke-width="1"/>
+              <rect x="52" y="18" width="14" height="28" rx="3" stroke="#999" stroke-width="1"/>
+              <path d="M70 40 L80 40 L84 32 L92 32 L92 42 L70 42 Z" stroke="#60a5fa" stroke-width="1" fill="none"/>
+              <circle cx="75" cy="42" r="2.5" stroke="#60a5fa" stroke-width="1"/>
+              <circle cx="88" cy="42" r="2.5" stroke="#60a5fa" stroke-width="1"/>
+            </svg>
+          </div>
+        </a>
+
+        <!-- Card 4 -->
+        <a href="#" class="news-row" style="display:grid;grid-template-columns:1fr 220px;gap:24px;align-items:center;padding:28px 32px;text-decoration:none;">
+          <div>
+            <div style="font-size:11px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:#7c3aed;margin-bottom:8px;">Voice AI</div>
+            <div style="font-size:22px;font-weight:700;letter-spacing:-0.02em;color:#030303;margin-bottom:8px;">ElevenLabs v4 Is Here</div>
+            <div style="font-size:14px;line-height:1.5;color:#666;">The new generation of voice models with improved naturalness, control and multilingual capabilities.</div>
+          </div>
+          <div style="height:90px;border-radius:6px;background:linear-gradient(135deg,#e8e8e8,#d4d4d8);display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;">
+            <svg width="100" height="60" viewBox="0 0 100 60" fill="none">
+              <line x1="20" y1="30" x2="20" y2="20" stroke="#a78bfa" stroke-width="2" stroke-linecap="round"/>
+              <line x1="28" y1="30" x2="28" y2="14" stroke="#a78bfa" stroke-width="2" stroke-linecap="round"/>
+              <line x1="36" y1="30" x2="36" y2="24" stroke="#a78bfa" stroke-width="2" stroke-linecap="round"/>
+              <line x1="44" y1="30" x2="44" y2="10" stroke="#a78bfa" stroke-width="2" stroke-linecap="round"/>
+              <line x1="52" y1="30" x2="52" y2="18" stroke="#a78bfa" stroke-width="2" stroke-linecap="round"/>
+              <line x1="60" y1="30" x2="60" y2="26" stroke="#a78bfa" stroke-width="2" stroke-linecap="round"/>
+              <line x1="68" y1="30" x2="68" y2="16" stroke="#a78bfa" stroke-width="2" stroke-linecap="round"/>
+              <line x1="76" y1="30" x2="76" y2="22" stroke="#a78bfa" stroke-width="2" stroke-linecap="round"/>
+            </svg>
+          </div>
+        </a>
+
+      </div>
+    </div>
   </div>
 </section>
+
+<style>
+.news-row { transition: background 0.15s; }
+.news-row:hover { background: #ececec; }
+@media(max-width:900px){
+  #news > div > div[style*="grid-template-columns:140px"] { grid-template-columns: 1fr !important; }
+  #news a.news-row { grid-template-columns: 1fr !important; }
+  #news a.news-row > div:last-child { display:none; }
+}
+</style>
 
 <!-- FOOTER -->
 <footer>
@@ -1450,229 +1636,6 @@ footer {
 </footer>
 
 <script>
-/* ── HERO OBSERVATORY — Signal Field (MVP spec) ── */
-(function(){
-  const canvas = document.getElementById('heroCanvas');
-  const heroRight = document.getElementById('heroRight');
-  const card = document.getElementById('nodeCard');
-  if(!canvas || !heroRight) return;
-  const ctx = canvas.getContext('2d');
-
-  // ── Fixed parameters (per spec) ──
-  const NODE_COUNT = 38;
-  const LINK_DIST = 130;
-  const HOVER_RADIUS = 18;
-  const FOLLOW_COEF = 0.02;
-  const MAX_OFFSET = 25;
-  const MINT_RATIO = 0.15;
-  const FADE_SCROLL_END = 600;
-  const MAX_TILT_DEG = 3;
-
-  const MODEL_NAMES = ['Claude 3.5','GPT-4o','Gemini 2.0','Grok 2','Mistral L2','LLaMA 3.1','DeepSeek V3','Qwen 2.5','Phi-4','Command R+'];
-  const SIGNAL_TYPES = ['Sentiment rising','Activity steady','Momentum up','New signal','Tracked'];
-
-  let W, H, nodes = [];
-  let mouse = { x: null, y: null };
-  let hoveredNode = null;
-  let focusedNode = null;
-  let rafId = null;
-  let running = false;
-
-  function resize(){
-    W = canvas.width = canvas.offsetWidth;
-    H = canvas.height = canvas.offsetHeight;
-  }
-  resize();
-  window.addEventListener('resize', resize);
-
-  function rand(a,b){ return a + Math.random()*(b-a); }
-
-  function initNodes(){
-    nodes = [];
-    for(let i=0;i<NODE_COUNT;i++){
-      const baseX = rand(0,W), baseY = rand(0,H);
-      nodes.push({
-        baseX, baseY,
-        x: baseX, y: baseY,
-        vx: rand(-0.15,0.15),
-        vy: rand(-0.15,0.15),
-        r: rand(1.5,3),
-        mint: Math.random() < MINT_RATIO,
-        name: MODEL_NAMES[i % MODEL_NAMES.length],
-        signal: SIGNAL_TYPES[i % SIGNAL_TYPES.length],
-        index: (Math.random()*30+65).toFixed(1)
-      });
-    }
-  }
-  initNodes();
-
-  function bounce(n){
-    if(n.baseX < 0 || n.baseX > W) n.vx *= -1;
-    if(n.baseY < 0 || n.baseY > H) n.vy *= -1;
-    n.baseX = Math.max(0, Math.min(W, n.baseX));
-    n.baseY = Math.max(0, Math.min(H, n.baseY));
-  }
-
-  function update(){
-    nodes.forEach(n=>{
-      // organic drift (breathing)
-      n.baseX += n.vx;
-      n.baseY += n.vy;
-      bounce(n);
-
-      // mouse-follow with lag, clamped to MAX_OFFSET
-      if(mouse.x !== null){
-        const dx = mouse.x - n.baseX, dy = mouse.y - n.baseY;
-        const dist = Math.hypot(dx,dy);
-        const pull = Math.min(dist * FOLLOW_COEF, MAX_OFFSET);
-        const angle = Math.atan2(dy,dx);
-        n.x = n.baseX + Math.cos(angle)*pull;
-        n.y = n.baseY + Math.sin(angle)*pull;
-      } else {
-        n.x = n.baseX; n.y = n.baseY;
-      }
-    });
-
-    // hover detection — once per frame
-    hoveredNode = null;
-    if(mouse.x !== null){
-      let minDist = HOVER_RADIUS;
-      nodes.forEach(n=>{
-        const d = Math.hypot(n.x-mouse.x, n.y-mouse.y);
-        if(d < minDist){ minDist = d; hoveredNode = n; }
-      });
-    }
-  }
-
-  function draw(){
-    ctx.clearRect(0,0,W,H);
-
-    // links — only pairs under LINK_DIST
-    for(let i=0;i<nodes.length;i++){
-      for(let j=i+1;j<nodes.length;j++){
-        const a = nodes[i], b = nodes[j];
-        const d = Math.hypot(a.x-b.x, a.y-b.y);
-        if(d < LINK_DIST){
-          const isHoverLinked = hoveredNode && (a===hoveredNode || b===hoveredNode);
-          let alpha = (1 - d/LINK_DIST) * 0.25;
-          if(isHoverLinked) alpha = 0.6;
-          if(focusedNode && a!==focusedNode && b!==focusedNode) alpha *= 0.3;
-
-          ctx.beginPath();
-          ctx.moveTo(a.x,a.y);
-          ctx.lineTo(b.x,b.y);
-          ctx.strokeStyle = (a.mint||b.mint)
-            ? `rgba(115,255,185,${alpha})`
-            : `rgba(255,255,255,${alpha*0.5})`;
-          ctx.lineWidth = isHoverLinked ? 1.1 : 0.8;
-          ctx.stroke();
-        }
-      }
-    }
-
-    // nodes
-    nodes.forEach(n=>{
-      const isHovered = n === hoveredNode;
-      const isFocused = n === focusedNode;
-      let r = n.r;
-      let alpha = n.mint ? 0.8 : 0.3;
-
-      if(isHovered){ r = n.r * 2; }
-      if(focusedNode && !isFocused){ alpha *= 0.3; }
-      if(isFocused){ alpha = 1; r = n.r * 2.2; }
-
-      // glow ring for hovered/focused
-      if(isHovered || isFocused){
-        ctx.beginPath();
-        ctx.arc(n.x, n.y, r*3, 0, Math.PI*2);
-        ctx.fillStyle = 'rgba(115,255,185,0.08)';
-        ctx.fill();
-      }
-
-      ctx.beginPath();
-      ctx.arc(n.x, n.y, r, 0, Math.PI*2);
-      ctx.fillStyle = n.mint
-        ? `rgba(115,255,185,${alpha})`
-        : `rgba(255,255,255,${alpha})`;
-      ctx.fill();
-    });
-
-    // node card (hover tooltip)
-    if(hoveredNode){
-      card.innerHTML = `<div class="nc-name">${hoveredNode.name}</div><div class="nc-meta">Index ${hoveredNode.index} · ${hoveredNode.signal}</div>`;
-      card.style.left = (hoveredNode.x + 14) + 'px';
-      card.style.top = (hoveredNode.y - 8) + 'px';
-      card.classList.add('show');
-    } else {
-      card.classList.remove('show');
-    }
-  }
-
-  function loop(){
-    if(!running) return;
-    update();
-    draw();
-    rafId = requestAnimationFrame(loop);
-  }
-  function start(){
-    if(running) return;
-    running = true;
-    loop();
-  }
-  function stop(){
-    running = false;
-    if(rafId) cancelAnimationFrame(rafId);
-  }
-  start();
-
-  // ── Mouse tracking (canvas-local coords) ──
-  heroRight.addEventListener('mousemove', e=>{
-    const rect = canvas.getBoundingClientRect();
-    mouse.x = e.clientX - rect.left;
-    mouse.y = e.clientY - rect.top;
-
-    // tilt — max 3deg, based on cursor position relative to center
-    const cx = rect.width/2, cy = rect.height/2;
-    const dx = (mouse.x - cx) / cx;
-    const dy = (mouse.y - cy) / cy;
-    heroRight.style.transform = `rotateY(${dx*MAX_TILT_DEG}deg) rotateX(${-dy*MAX_TILT_DEG}deg)`;
-  });
-  heroRight.addEventListener('mouseleave', ()=>{
-    mouse.x = null; mouse.y = null;
-    heroRight.style.transform = 'rotateY(0deg) rotateX(0deg)';
-  });
-
-  // ── Click — focus / diaphragm effect ──
-  heroRight.addEventListener('click', ()=>{
-    if(hoveredNode){
-      focusedNode = (focusedNode === hoveredNode) ? null : hoveredNode;
-    } else {
-      focusedNode = null;
-    }
-  });
-
-  // ── Scroll-driven fade + scale, stop loop past threshold ──
-  window.addEventListener('scroll', ()=>{
-    const y = window.scrollY;
-    if(y > FADE_SCROLL_END){
-      heroRight.style.display = 'none';
-      stop();
-      return;
-    }
-    heroRight.style.display = 'flex';
-    if(!running) start();
-    const progress = y / FADE_SCROLL_END;
-    canvas.style.opacity = 1 - progress;
-    canvas.style.transform = `scale(${1 + progress*0.08})`;
-  });
-
-  // ── Pause when tab hidden ──
-  document.addEventListener('visibilitychange', ()=>{
-    if(document.hidden) stop();
-    else if(window.scrollY <= FADE_SCROLL_END) start();
-  });
-})();
-
 /* ── SCORE COUNTER ANIMATION ── */
 function countUp(el, target, suffix=''){
   let v=0, s=target/60;
@@ -1796,6 +1759,243 @@ function setMap(btn, cat){
   `).join('');
 }
 setMap(document.querySelector('.map-cat-btn'), 'language');
+
+/* ── ADAPTIVE POLL DIALOG ── */
+(function(){
+  const card = document.getElementById('pollCard');
+  const footnote = document.getElementById('pollFootnote');
+  if(!card) return;
+
+  let state = {
+    step: 1,
+    totalSteps: 5,
+    interests: [],      // multi-select from step 1
+    style: null,         // fast vs deep
+    purpose: null,       // work / learning / projects / experiments
+    priority: null,      // dynamic, depends on interests
+    satisfaction: null,
+  };
+
+  function setProgress(stepNum, doneUpTo){
+    document.querySelectorAll('.poll-dot').forEach(d=>{
+      const s = parseInt(d.dataset.step);
+      d.classList.remove('active','done');
+      if(s < stepNum) d.classList.add('done');
+      else if(s === stepNum) d.classList.add('active');
+    });
+  }
+
+  // ── Step 1: interests (multi-select) ──
+  function renderStep1(){
+    setProgress(1);
+    card.innerHTML = `
+      <div class="poll-q-label">Question 1 of 5</div>
+      <div class="poll-q-title">What do you use AI for? <span style="color:#999;font-weight:400;font-size:14px;">(pick all that apply)</span></div>
+      <div class="poll-options" id="opt1">
+        ${optBtn('text','Writing & Text', false)}
+        ${optBtn('code','Code & Development', false)}
+        ${optBtn('image','Images & Visuals', false)}
+        ${optBtn('news','News & Research', false)}
+        ${optBtn('business','Business & Strategy', false)}
+        ${optBtn('automation','Automation', false)}
+      </div>
+      <div class="poll-actions">
+        <span></span>
+        <button class="poll-btn-next" id="nextBtn" disabled>Continue →</button>
+      </div>
+    `;
+    const opts = card.querySelectorAll('.poll-opt');
+    opts.forEach(o=>{
+      o.addEventListener('click', ()=>{
+        o.classList.toggle('selected');
+        const val = o.dataset.val;
+        if(state.interests.includes(val)){
+          state.interests = state.interests.filter(v=>v!==val);
+        } else {
+          state.interests.push(val);
+        }
+        document.getElementById('nextBtn').disabled = state.interests.length === 0;
+      });
+    });
+    document.getElementById('nextBtn').addEventListener('click', ()=>{ state.step=2; renderStep2(); });
+  }
+
+  // ── Step 2: universal — speed style ──
+  function renderStep2(){
+    setProgress(2);
+    card.innerHTML = `
+      <div class="poll-q-label">Question 2 of 5</div>
+      <div class="poll-q-title">How do you usually work with AI?</div>
+      <div class="poll-options" id="opt2">
+        ${optBtn('fast','Fast — quick answers, on the go', true)}
+        ${optBtn('deep','Deep — long sessions, detailed work', true)}
+      </div>
+      <div class="poll-actions">
+        <button class="poll-btn-back" id="backBtn">← Back</button>
+        <button class="poll-btn-next" id="nextBtn" disabled>Continue →</button>
+      </div>
+    `;
+    bindSingleSelect('opt2', val=>{ state.style = val; document.getElementById('nextBtn').disabled=false; });
+    document.getElementById('backBtn').addEventListener('click', ()=>{ state.step=1; renderStep1(); restoreStep1Selection(); });
+    document.getElementById('nextBtn').addEventListener('click', ()=>{ state.step=3; renderStep3(); });
+  }
+
+  // ── Step 3: universal — purpose ──
+  function renderStep3(){
+    setProgress(3);
+    card.innerHTML = `
+      <div class="poll-q-label">Question 3 of 5</div>
+      <div class="poll-q-title">What's the main purpose?</div>
+      <div class="poll-options" id="opt3">
+        ${optBtn('work','Work tasks', true)}
+        ${optBtn('learning','Learning something new', true)}
+        ${optBtn('projects','Personal projects', true)}
+        ${optBtn('experiments','Just experimenting', true)}
+      </div>
+      <div class="poll-actions">
+        <button class="poll-btn-back" id="backBtn">← Back</button>
+        <button class="poll-btn-next" id="nextBtn" disabled>Continue →</button>
+      </div>
+    `;
+    bindSingleSelect('opt3', val=>{ state.purpose = val; document.getElementById('nextBtn').disabled=false; });
+    document.getElementById('backBtn').addEventListener('click', ()=>{ state.step=2; renderStep2(); });
+    document.getElementById('nextBtn').addEventListener('click', ()=>{ state.step=4; renderStep4(); });
+  }
+
+  // ── Step 4: DYNAMIC — priority based on intersection of interests ──
+  function renderStep4(){
+    setProgress(4);
+    const { title, options } = getPriorityQuestion(state.interests);
+    card.innerHTML = `
+      <div class="poll-q-label">Question 4 of 5</div>
+      <div class="poll-q-title">${title}</div>
+      <div class="poll-options" id="opt4">
+        ${options.map(o=>optBtn(o.val,o.label,true)).join('')}
+      </div>
+      <div class="poll-actions">
+        <button class="poll-btn-back" id="backBtn">← Back</button>
+        <button class="poll-btn-next" id="nextBtn" disabled>Continue →</button>
+      </div>
+    `;
+    bindSingleSelect('opt4', val=>{ state.priority = val; document.getElementById('nextBtn').disabled=false; });
+    document.getElementById('backBtn').addEventListener('click', ()=>{ state.step=3; renderStep3(); });
+    document.getElementById('nextBtn').addEventListener('click', ()=>{ state.step=5; renderStep5(); });
+  }
+
+  // Logic: choose question based on which interests intersect
+  function getPriorityQuestion(interests){
+    const has = (k)=>interests.includes(k);
+    if(has('text') && has('code')){
+      return { title:'Between text and code — what matters more right now?', options:[
+        {val:'content', label:'Creating content'},
+        {val:'automation_proc', label:'Automating processes'},
+        {val:'product_dev', label:'Building products'},
+      ]};
+    }
+    if(has('image') && has('text')){
+      return { title:'Where does visual + text work matter most?', options:[
+        {val:'design', label:'Design'},
+        {val:'marketing', label:'Marketing'},
+        {val:'creative', label:'Creative concepts'},
+      ]};
+    }
+    if(has('code') && has('automation')){
+      return { title:'What matters most for shipping?', options:[
+        {val:'shipping', label:'Shipping features faster'},
+        {val:'reducing_work', label:'Reducing manual work'},
+        {val:'scaling', label:'Scaling a system'},
+      ]};
+    }
+    if(has('business') && has('news')){
+      return { title:'What do you need most from AI right now?', options:[
+        {val:'decisions', label:'Faster decisions'},
+        {val:'staying_informed', label:'Staying informed'},
+        {val:'analysis', label:'Deeper analysis'},
+      ]};
+    }
+    // generic fallback — works for any single interest or unusual combos
+    return { title:'What matters most to you in your AI workflow?', options:[
+      {val:'speed', label:'Speed'},
+      {val:'accuracy', label:'Accuracy'},
+      {val:'creativity', label:'Creativity'},
+      {val:'cost', label:'Cost'},
+    ]};
+  }
+
+  // ── Step 5: satisfaction ──
+  function renderStep5(){
+    setProgress(5);
+    card.innerHTML = `
+      <div class="poll-q-label">Question 5 of 5</div>
+      <div class="poll-q-title">Overall, how satisfied are you with AI tools today?</div>
+      <div class="poll-options" id="opt5">
+        ${optBtn('very','Very satisfied', true)}
+        ${optBtn('satisfied','Satisfied', true)}
+        ${optBtn('neutral','Neutral', true)}
+        ${optBtn('not','Not satisfied yet', true)}
+      </div>
+      <div class="poll-actions">
+        <button class="poll-btn-back" id="backBtn">← Back</button>
+        <button class="poll-btn-next" id="nextBtn" disabled>See result →</button>
+      </div>
+    `;
+    bindSingleSelect('opt5', val=>{ state.satisfaction = val; document.getElementById('nextBtn').disabled=false; });
+    document.getElementById('backBtn').addEventListener('click', ()=>{ state.step=4; renderStep4(); });
+    document.getElementById('nextBtn').addEventListener('click', renderResult);
+  }
+
+  // ── Final result ──
+  function renderResult(){
+    setProgress(6); // all done
+    const interestLabels = {
+      text:'Writing', code:'Code', image:'Visuals', news:'Research', business:'Business', automation:'Automation'
+    };
+    const summary = state.interests.map(i=>interestLabels[i]).join(', ');
+    card.innerHTML = `
+      <div style="text-align:center;">
+        <div class="poll-result-icon">✓</div>
+        <div class="poll-q-title" style="text-align:center;">Thanks — that helps a lot</div>
+        <div class="poll-result-text">
+          You're mainly focused on <strong>${summary}</strong>, working in a
+          <strong>${state.style==='fast'?'fast, on-the-go':'deep, detailed'}</strong> style.
+          We'll surface signals and tools on AIscentra that match this.
+        </div>
+        <div class="poll-result-note">
+          Your answers help personalize content and improve AIscentra's analytics. Nothing is shared outside the platform.
+        </div>
+      </div>
+    `;
+    footnote.textContent = '';
+  }
+
+  // ── Helpers ──
+  function optBtn(val, label, single){
+    return `<button class="poll-opt${single?' single':''}" data-val="${val}" type="button">
+      <span class="check">${single ? '' : ''}</span>
+      <span>${label}</span>
+    </button>`;
+  }
+  function bindSingleSelect(containerId, onSelect){
+    const opts = document.getElementById(containerId).querySelectorAll('.poll-opt');
+    opts.forEach(o=>{
+      o.addEventListener('click', ()=>{
+        opts.forEach(x=>x.classList.remove('selected'));
+        o.classList.add('selected');
+        onSelect(o.dataset.val);
+      });
+    });
+  }
+  function restoreStep1Selection(){
+    const opts = document.querySelectorAll('#opt1 .poll-opt');
+    opts.forEach(o=>{
+      if(state.interests.includes(o.dataset.val)) o.classList.add('selected');
+    });
+    document.getElementById('nextBtn').disabled = state.interests.length === 0;
+  }
+
+  // init
+  renderStep1();
+})();
 
 /* ── MONITOR EMULATOR ── */
 (function(){
