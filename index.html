@@ -1307,95 +1307,95 @@ footer {
 </section>
 
 <!-- WHITE BLOCK 1 — POLL -->
-<section id="poll" class="surface-panel" style="padding:100px 40px;">
-  <div style="max-width:680px;margin:0 auto;">
+<section id="poll" class="surface-panel" style="padding:40px;">
+  <div style="max-width:1200px;margin:0 auto;">
 
-    <div style="text-align:center;margin-bottom:48px;">
-      <div style="font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:#039855;margin-bottom:16px;">AIscentra Poll</div>
-      <h2 style="font-size:clamp(32px,4vw,46px);font-weight:700;letter-spacing:-0.03em;line-height:1.05;color:#030303;">Tell us how<br>you use AI</h2>
+    <!-- Compact horizontal row: label + progress + question + options + button -->
+    <div style="display:grid;grid-template-columns:200px 1fr auto;gap:32px;align-items:center;">
+
+      <!-- LEFT: label + progress -->
+      <div>
+        <div style="font-size:10px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:#039855;margin-bottom:10px;">AIscentra Poll</div>
+        <div style="font-size:15px;font-weight:700;letter-spacing:-0.02em;color:#030303;line-height:1.2;margin-bottom:14px;">How do<br>you use AI?</div>
+        <div id="pollProgress" style="display:flex;gap:6px;">
+          <div class="poll-dot" data-step="1"></div>
+          <div class="poll-dot" data-step="2"></div>
+          <div class="poll-dot" data-step="3"></div>
+          <div class="poll-dot" data-step="4"></div>
+          <div class="poll-dot" data-step="5"></div>
+        </div>
+      </div>
+
+      <!-- CENTER: question + options (horizontal) -->
+      <div id="pollCard" style="min-height:0;">
+        <!-- populated by JS -->
+      </div>
+
+      <!-- RIGHT: footnote -->
+      <div id="pollFootnote" style="font-size:11px;color:#999;max-width:120px;line-height:1.4;"></div>
+
     </div>
-
-    <!-- progress dots -->
-    <div id="pollProgress" style="display:flex;justify-content:center;gap:8px;margin-bottom:40px;">
-      <div class="poll-dot" data-step="1"></div>
-      <div class="poll-dot" data-step="2"></div>
-      <div class="poll-dot" data-step="3"></div>
-      <div class="poll-dot" data-step="4"></div>
-      <div class="poll-dot" data-step="5"></div>
-    </div>
-
-    <!-- poll card -->
-    <div id="pollCard" class="surface-card" style="border-radius:4px;padding:48px 40px;min-height:280px;display:flex;flex-direction:column;justify-content:center;">
-      <!-- populated by JS -->
-    </div>
-
-    <div id="pollFootnote" style="text-align:center;margin-top:20px;font-size:12px;color:#999;min-height:16px;"></div>
-
   </div>
 </section>
 
 <style>
 .poll-dot {
-  width: 8px; height: 8px; border-radius: 50%;
+  width: 7px; height: 7px; border-radius: 50%;
   background: #e0e0e0; transition: all 0.3s ease;
 }
 .poll-dot.done { background: #73ffb9; }
 .poll-dot.active { background: #030303; transform: scale(1.3); }
 
 .poll-q-label {
-  font-size: 11px; font-weight: 600; letter-spacing: .07em;
-  text-transform: uppercase; color: #999; margin-bottom: 14px;
+  font-size: 10px; font-weight: 600; letter-spacing: .07em;
+  text-transform: uppercase; color: #999; margin-bottom: 4px;
 }
 .poll-q-title {
-  font-size: 24px; font-weight: 700; letter-spacing: -0.02em;
-  color: #030303; line-height: 1.25; margin-bottom: 28px;
+  font-size: 15px; font-weight: 700; letter-spacing: -0.015em;
+  color: #030303; line-height: 1.25; margin-bottom: 10px;
 }
-.poll-options { display: flex; flex-direction: column; gap: 10px; }
+.poll-options { display: flex; flex-direction: column; gap: 6px; }
+.poll-row { flex-direction: row !important; flex-wrap: wrap; gap: 6px; }
 .poll-opt {
-  display: flex; align-items: center; gap: 12px;
-  background: #fff; border: 1px solid rgba(0,0,0,0.08); border-radius: 4px;
-  padding: 14px 18px; cursor: pointer; transition: all 0.15s;
-  font-size: 15px; font-weight: 500; color: #030303;
-  text-align: left;
-  box-shadow: 0 1px 2px rgba(0,0,0,0.04), 0 1px 0 rgba(255,255,255,0.7) inset;
+  display: inline-flex; align-items: center; gap: 6px;
+  background: #fff; border: 1px solid rgba(0,0,0,0.08); border-radius: 9999px;
+  padding: 7px 14px; cursor: pointer; transition: all 0.15s;
+  font-size: 13px; font-weight: 500; color: #030303; white-space: nowrap;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.04);
 }
-.poll-opt:hover { border-color: #73ffb9; background: #f4fff9; box-shadow: 0 2px 5px rgba(0,0,0,0.06), 0 1px 0 rgba(255,255,255,0.7) inset; }
-.poll-opt.selected { border-color: #030303; background: #030303; color: #fff; box-shadow: 0 1px 2px rgba(0,0,0,0.15); }
+.poll-opt:hover { border-color: #73ffb9; background: #f4fff9; }
+.poll-opt.selected { border-color: #030303; background: #030303; color: #fff; box-shadow: none; }
 .poll-opt .check {
-  width: 18px; height: 18px; border-radius: 4px;
+  width: 14px; height: 14px; border-radius: 3px;
   border: 1.5px solid #ccc; flex-shrink: 0;
   display: flex; align-items: center; justify-content: center;
-  font-size: 11px; transition: all 0.15s;
+  font-size: 9px; transition: all 0.15s;
 }
-.poll-opt.selected .check { background: #73ffb9; border-color: #73ffb9; color: #030303; }
 .poll-opt.single .check { border-radius: 50%; }
-
-.poll-actions { display: flex; justify-content: space-between; align-items: center; margin-top: 28px; }
+.poll-opt.selected .check { background: #73ffb9; border-color: #73ffb9; color: #030303; }
+.poll-actions {
+  display: flex; justify-content: space-between; align-items: center; margin-top: 12px;
+}
 .poll-btn-next {
-  font-size: 14px; font-weight: 600; color: #fff; background: #030303;
-  border: none; padding: 11px 26px; border-radius: 9999px;
+  font-size: 12px; font-weight: 600; color: #fff; background: #030303;
+  border: none; padding: 8px 18px; border-radius: 9999px;
   cursor: pointer; transition: opacity 0.15s;
 }
-.poll-btn-next:disabled { opacity: 0.25; cursor: not-allowed; }
-.poll-btn-next:not(:disabled):hover { opacity: 0.85; }
+.poll-btn-next:disabled { opacity: 0.2; cursor: not-allowed; }
+.poll-btn-next:not(:disabled):hover { opacity: 0.8; }
 .poll-btn-back {
-  font-size: 13px; font-weight: 500; color: #999; background: none;
-  border: none; cursor: pointer; transition: color 0.15s;
+  font-size: 12px; font-weight: 500; color: #aaa; background: none;
+  border: none; cursor: pointer; transition: color 0.15s; padding: 0;
 }
 .poll-btn-back:hover { color: #030303; }
-
 .poll-result-icon {
-  width: 48px; height: 48px; border-radius: 50%;
-  background: #73ffb9; display: flex; align-items: center; justify-content: center;
-  margin: 0 auto 20px; font-size: 22px;
+  width: 32px; height: 32px; border-radius: 50%;
+  background: #73ffb9; display: inline-flex; align-items: center;
+  justify-content: center; font-size: 14px; font-weight: 700; color: #030303;
 }
-.poll-result-text {
-  font-size: 16px; line-height: 1.6; color: #444; text-align: center;
-  max-width: 480px; margin: 0 auto;
-}
-.poll-result-note {
-  font-size: 13px; color: #999; text-align: center; margin-top: 20px; line-height: 1.5;
-}
+.poll-result-text { font-size: 13px; line-height: 1.5; color: #444; }
+.poll-result-note { font-size: 11px; color: #999; margin-top: 8px; }
+
 </style>
 
 <!-- REPORTS -->
@@ -1532,19 +1532,11 @@ footer {
           </div>
         </div>
 
-        <div style="position:relative;padding-bottom:54px;">
+        <div style="position:relative;">
           <div style="position:absolute;left:0;top:4px;width:10px;height:10px;border-radius:50%;background:#60a5fa;"></div>
           <div style="padding-left:24px;">
             <div style="font-size:13px;font-weight:500;color:#333;">May 24, 2025</div>
             <div style="font-size:11px;color:#999;margin-top:2px;">4 min read</div>
-          </div>
-        </div>
-
-        <div style="position:relative;">
-          <div style="position:absolute;left:0;top:4px;width:10px;height:10px;border-radius:50%;background:#a78bfa;"></div>
-          <div style="padding-left:24px;">
-            <div style="font-size:13px;font-weight:500;color:#333;">May 23, 2025</div>
-            <div style="font-size:11px;color:#999;margin-top:2px;">3 min read</div>
           </div>
         </div>
       </div>
@@ -1586,7 +1578,7 @@ footer {
         </a>
 
         <!-- Card 3 -->
-        <a href="#" class="news-row" style="display:grid;grid-template-columns:1fr 220px;gap:24px;align-items:center;padding:28px 32px;border-bottom:1px solid rgba(0,0,0,0.06);text-decoration:none;">
+        <a href="#" class="news-row" style="display:grid;grid-template-columns:1fr 220px;gap:24px;align-items:center;padding:28px 32px;text-decoration:none;">
           <div>
             <div style="font-size:11px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:#039855;margin-bottom:8px;">Model Release</div>
             <div style="font-size:22px;font-weight:700;letter-spacing:-0.02em;color:#030303;margin-bottom:8px;">Xiaomi Unveils MiMo-V2 Family of Models</div>
@@ -1599,27 +1591,6 @@ footer {
               <path d="M70 40 L80 40 L84 32 L92 32 L92 42 L70 42 Z" stroke="#60a5fa" stroke-width="1" fill="none"/>
               <circle cx="75" cy="42" r="2.5" stroke="#60a5fa" stroke-width="1"/>
               <circle cx="88" cy="42" r="2.5" stroke="#60a5fa" stroke-width="1"/>
-            </svg>
-          </div>
-        </a>
-
-        <!-- Card 4 -->
-        <a href="#" class="news-row" style="display:grid;grid-template-columns:1fr 220px;gap:24px;align-items:center;padding:28px 32px;text-decoration:none;">
-          <div>
-            <div style="font-size:11px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:#7c3aed;margin-bottom:8px;">Voice AI</div>
-            <div style="font-size:22px;font-weight:700;letter-spacing:-0.02em;color:#030303;margin-bottom:8px;">ElevenLabs v4 Is Here</div>
-            <div style="font-size:14px;line-height:1.5;color:#666;">The new generation of voice models with improved naturalness, control and multilingual capabilities.</div>
-          </div>
-          <div style="height:90px;border-radius:6px;background:linear-gradient(135deg,#f0f0f0,#e2e2e6);display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,0.06) inset;">
-            <svg width="100" height="60" viewBox="0 0 100 60" fill="none">
-              <line x1="20" y1="30" x2="20" y2="20" stroke="#7c3aed" stroke-width="2" stroke-linecap="round"/>
-              <line x1="28" y1="30" x2="28" y2="14" stroke="#7c3aed" stroke-width="2" stroke-linecap="round"/>
-              <line x1="36" y1="30" x2="36" y2="24" stroke="#7c3aed" stroke-width="2" stroke-linecap="round"/>
-              <line x1="44" y1="30" x2="44" y2="10" stroke="#7c3aed" stroke-width="2" stroke-linecap="round"/>
-              <line x1="52" y1="30" x2="52" y2="18" stroke="#7c3aed" stroke-width="2" stroke-linecap="round"/>
-              <line x1="60" y1="30" x2="60" y2="26" stroke="#7c3aed" stroke-width="2" stroke-linecap="round"/>
-              <line x1="68" y1="30" x2="68" y2="16" stroke="#7c3aed" stroke-width="2" stroke-linecap="round"/>
-              <line x1="76" y1="30" x2="76" y2="22" stroke="#7c3aed" stroke-width="2" stroke-linecap="round"/>
             </svg>
           </div>
         </a>
@@ -1847,14 +1818,14 @@ setMap(document.querySelector('.map-cat-btn'), 'language');
   function renderStep1(){
     setProgress(1);
     card.innerHTML = `
-      <div class="poll-q-label">Question 1 of 5</div>
-      <div class="poll-q-title">What do you use AI for? <span style="color:#999;font-weight:400;font-size:14px;">(pick all that apply)</span></div>
-      <div class="poll-options" id="opt1">
-        ${optBtn('text','Writing & Text', false)}
-        ${optBtn('code','Code & Development', false)}
-        ${optBtn('image','Images & Visuals', false)}
-        ${optBtn('news','News & Research', false)}
-        ${optBtn('business','Business & Strategy', false)}
+      <div class="poll-q-label">1 / 5 &nbsp;·&nbsp; pick all that apply</div>
+      <div class="poll-q-title">What do you use AI for?</div>
+      <div class="poll-options poll-row" id="opt1">
+        ${optBtn('text','Writing', false)}
+        ${optBtn('code','Code', false)}
+        ${optBtn('image','Images', false)}
+        ${optBtn('news','Research', false)}
+        ${optBtn('business','Business', false)}
         ${optBtn('automation','Automation', false)}
       </div>
       <div class="poll-actions">
@@ -1878,15 +1849,14 @@ setMap(document.querySelector('.map-cat-btn'), 'language');
     document.getElementById('nextBtn').addEventListener('click', ()=>{ state.step=2; renderStep2(); });
   }
 
-  // ── Step 2: universal — speed style ──
   function renderStep2(){
     setProgress(2);
     card.innerHTML = `
-      <div class="poll-q-label">Question 2 of 5</div>
-      <div class="poll-q-title">How do you usually work with AI?</div>
-      <div class="poll-options" id="opt2">
-        ${optBtn('fast','Fast — quick answers, on the go', true)}
-        ${optBtn('deep','Deep — long sessions, detailed work', true)}
+      <div class="poll-q-label">2 / 5</div>
+      <div class="poll-q-title">How do you work with AI?</div>
+      <div class="poll-options poll-row" id="opt2">
+        ${optBtn('fast','Fast & quick', true)}
+        ${optBtn('deep','Deep & detailed', true)}
       </div>
       <div class="poll-actions">
         <button class="poll-btn-back" id="backBtn">← Back</button>
@@ -1898,17 +1868,16 @@ setMap(document.querySelector('.map-cat-btn'), 'language');
     document.getElementById('nextBtn').addEventListener('click', ()=>{ state.step=3; renderStep3(); });
   }
 
-  // ── Step 3: universal — purpose ──
   function renderStep3(){
     setProgress(3);
     card.innerHTML = `
-      <div class="poll-q-label">Question 3 of 5</div>
-      <div class="poll-q-title">What's the main purpose?</div>
-      <div class="poll-options" id="opt3">
-        ${optBtn('work','Work tasks', true)}
-        ${optBtn('learning','Learning something new', true)}
-        ${optBtn('projects','Personal projects', true)}
-        ${optBtn('experiments','Just experimenting', true)}
+      <div class="poll-q-label">3 / 5</div>
+      <div class="poll-q-title">Main purpose?</div>
+      <div class="poll-options poll-row" id="opt3">
+        ${optBtn('work','Work', true)}
+        ${optBtn('learning','Learning', true)}
+        ${optBtn('projects','Projects', true)}
+        ${optBtn('experiments','Experiments', true)}
       </div>
       <div class="poll-actions">
         <button class="poll-btn-back" id="backBtn">← Back</button>
@@ -1920,14 +1889,13 @@ setMap(document.querySelector('.map-cat-btn'), 'language');
     document.getElementById('nextBtn').addEventListener('click', ()=>{ state.step=4; renderStep4(); });
   }
 
-  // ── Step 4: DYNAMIC — priority based on intersection of interests ──
   function renderStep4(){
     setProgress(4);
     const { title, options } = getPriorityQuestion(state.interests);
     card.innerHTML = `
-      <div class="poll-q-label">Question 4 of 5</div>
+      <div class="poll-q-label">4 / 5</div>
       <div class="poll-q-title">${title}</div>
-      <div class="poll-options" id="opt4">
+      <div class="poll-options poll-row" id="opt4">
         ${options.map(o=>optBtn(o.val,o.label,true)).join('')}
       </div>
       <div class="poll-actions">
@@ -1940,61 +1908,39 @@ setMap(document.querySelector('.map-cat-btn'), 'language');
     document.getElementById('nextBtn').addEventListener('click', ()=>{ state.step=5; renderStep5(); });
   }
 
-  // Logic: choose question based on which interests intersect
   function getPriorityQuestion(interests){
     const has = (k)=>interests.includes(k);
-    if(has('text') && has('code')){
-      return { title:'Between text and code — what matters more right now?', options:[
-        {val:'content', label:'Creating content'},
-        {val:'automation_proc', label:'Automating processes'},
-        {val:'product_dev', label:'Building products'},
-      ]};
-    }
-    if(has('image') && has('text')){
-      return { title:'Where does visual + text work matter most?', options:[
-        {val:'design', label:'Design'},
-        {val:'marketing', label:'Marketing'},
-        {val:'creative', label:'Creative concepts'},
-      ]};
-    }
-    if(has('code') && has('automation')){
-      return { title:'What matters most for shipping?', options:[
-        {val:'shipping', label:'Shipping features faster'},
-        {val:'reducing_work', label:'Reducing manual work'},
-        {val:'scaling', label:'Scaling a system'},
-      ]};
-    }
-    if(has('business') && has('news')){
-      return { title:'What do you need most from AI right now?', options:[
-        {val:'decisions', label:'Faster decisions'},
-        {val:'staying_informed', label:'Staying informed'},
-        {val:'analysis', label:'Deeper analysis'},
-      ]};
-    }
-    // generic fallback — works for any single interest or unusual combos
-    return { title:'What matters most to you in your AI workflow?', options:[
-      {val:'speed', label:'Speed'},
-      {val:'accuracy', label:'Accuracy'},
-      {val:'creativity', label:'Creativity'},
-      {val:'cost', label:'Cost'},
+    if(has('text') && has('code')) return { title:'What matters more right now?', options:[
+      {val:'content', label:'Content'},{val:'automation_proc', label:'Automation'},{val:'product_dev', label:'Products'},
+    ]};
+    if(has('image') && has('text')) return { title:'Where does visual + text matter most?', options:[
+      {val:'design', label:'Design'},{val:'marketing', label:'Marketing'},{val:'creative', label:'Creative'},
+    ]};
+    if(has('code') && has('automation')) return { title:'What matters most for shipping?', options:[
+      {val:'shipping', label:'Speed'},{val:'reducing_work', label:'Less manual work'},{val:'scaling', label:'Scale'},
+    ]};
+    if(has('business') && has('news')) return { title:'What do you need most?', options:[
+      {val:'decisions', label:'Decisions'},{val:'staying_informed', label:'Stay informed'},{val:'analysis', label:'Analysis'},
+    ]};
+    return { title:'Top priority in your AI workflow?', options:[
+      {val:'speed', label:'Speed'},{val:'accuracy', label:'Accuracy'},{val:'creativity', label:'Creativity'},{val:'cost', label:'Cost'},
     ]};
   }
 
-  // ── Step 5: satisfaction ──
   function renderStep5(){
     setProgress(5);
     card.innerHTML = `
-      <div class="poll-q-label">Question 5 of 5</div>
-      <div class="poll-q-title">Overall, how satisfied are you with AI tools today?</div>
-      <div class="poll-options" id="opt5">
-        ${optBtn('very','Very satisfied', true)}
-        ${optBtn('satisfied','Satisfied', true)}
+      <div class="poll-q-label">5 / 5</div>
+      <div class="poll-q-title">Satisfied with AI tools today?</div>
+      <div class="poll-options poll-row" id="opt5">
+        ${optBtn('very','Very', true)}
+        ${optBtn('satisfied','Yes', true)}
         ${optBtn('neutral','Neutral', true)}
-        ${optBtn('not','Not satisfied yet', true)}
+        ${optBtn('not','Not yet', true)}
       </div>
       <div class="poll-actions">
         <button class="poll-btn-back" id="backBtn">← Back</button>
-        <button class="poll-btn-next" id="nextBtn" disabled>See result →</button>
+        <button class="poll-btn-next" id="nextBtn" disabled>Done →</button>
       </div>
     `;
     bindSingleSelect('opt5', val=>{ state.satisfaction = val; document.getElementById('nextBtn').disabled=false; });
@@ -2002,34 +1948,25 @@ setMap(document.querySelector('.map-cat-btn'), 'language');
     document.getElementById('nextBtn').addEventListener('click', renderResult);
   }
 
-  // ── Final result ──
   function renderResult(){
-    setProgress(6); // all done
-    const interestLabels = {
-      text:'Writing', code:'Code', image:'Visuals', news:'Research', business:'Business', automation:'Automation'
-    };
+    setProgress(6);
+    const interestLabels = { text:'Writing', code:'Code', image:'Visuals', news:'Research', business:'Business', automation:'Automation' };
     const summary = state.interests.map(i=>interestLabels[i]).join(', ');
     card.innerHTML = `
-      <div style="text-align:center;">
-        <div class="poll-result-icon">✓</div>
-        <div class="poll-q-title" style="text-align:center;">Thanks — that helps a lot</div>
-        <div class="poll-result-text">
-          You're mainly focused on <strong>${summary}</strong>, working in a
-          <strong>${state.style==='fast'?'fast, on-the-go':'deep, detailed'}</strong> style.
-          We'll surface signals and tools on AIscentra that match this.
-        </div>
-        <div class="poll-result-note">
-          Your answers help personalize content and improve AIscentra's analytics. Nothing is shared outside the platform.
+      <div style="display:flex;align-items:center;gap:16px;flex-wrap:wrap;">
+        <div style="width:32px;height:32px;border-radius:50%;background:#73ffb9;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;color:#030303;flex-shrink:0;">✓</div>
+        <div>
+          <div style="font-size:14px;font-weight:600;color:#030303;margin-bottom:3px;">Thanks — that helps.</div>
+          <div style="font-size:13px;color:#666;line-height:1.5;">Focused on <strong>${summary}</strong> · ${state.style==='fast'?'Fast style':'Deep style'} · AIscentra will surface matching signals.</div>
         </div>
       </div>
     `;
-    footnote.textContent = '';
+    footnote.textContent = 'Answers used only for content personalisation within AIscentra.';
   }
 
-  // ── Helpers ──
   function optBtn(val, label, single){
     return `<button class="poll-opt${single?' single':''}" data-val="${val}" type="button">
-      <span class="check">${single ? '' : ''}</span>
+      <span class="check"></span>
       <span>${label}</span>
     </button>`;
   }
