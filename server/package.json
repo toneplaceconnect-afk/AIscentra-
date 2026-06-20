@@ -2,11 +2,11 @@
   "name": "aiscentra-backend",
   "version": "1.0.0",
   "description": "AIscentra backend core — Researcher / Editor / Assistant pipeline service",
-  "main": "server/index.js",
+  "main": "index.js",
   "type": "commonjs",
   "scripts": {
-    "start": "node server/index.js",
-    "dev": "node --watch server/index.js"
+    "start": "node index.js",
+    "dev": "node --watch index.js"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.45.4",
