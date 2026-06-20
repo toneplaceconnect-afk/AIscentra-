@@ -10,10 +10,10 @@ const { supabase } = require('../lib/supabase');
 const { runWithLogging } = require('../lib/aiRunLogger');
 const { getCurrentUser } = require('../lib/currentUser');
 const { ASSISTANT_SYSTEM_PROMPT, buildAssistantUserPrompt } = require('../prompts');
+const { ASSISTANT_FALLBACKS } = require('../lib/models');
 
 const router = express.Router();
 
-const ASSISTANT_MODEL = process.env.ASSISTANT_MODEL || 'anthropic/claude-3.5-sonnet';
 
 // How many published articles to pull in as context. MVP keeps this
 // simple — no embeddings/vector search yet, just the most recent
@@ -79,7 +79,7 @@ router.post('/query', async (req, res) => {
     try {
       assistantResult = await runWithLogging({
         role: 'assistant',
-        model: ASSISTANT_MODEL,
+        model: ASSISTANT_FALLBACKS,
         systemPrompt: ASSISTANT_SYSTEM_PROMPT,
         userPrompt,
         userId: currentUser.id,

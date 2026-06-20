@@ -11,10 +11,10 @@ const { supabase } = require('../lib/supabase');
 const { runWithLogging, toNullableUuid } = require('../lib/aiRunLogger');
 const { getCurrentUser } = require('../lib/currentUser');
 const { EDITOR_SYSTEM_PROMPT } = require('../prompts');
+const { EDITOR_FALLBACKS } = require('../lib/models');
 
 const router = express.Router();
 
-const EDITOR_MODEL = process.env.EDITOR_MODEL || 'anthropic/claude-3.5-sonnet';
 
 /**
  * POST /api/articles/generate
@@ -63,7 +63,7 @@ router.post('/generate', async (req, res) => {
     try {
       editorResult = await runWithLogging({
         role: 'editor',
-        model: EDITOR_MODEL,
+        model: EDITOR_FALLBACKS,
         systemPrompt: EDITOR_SYSTEM_PROMPT,
         userPrompt,
         researchSourceId: researchRow.id,

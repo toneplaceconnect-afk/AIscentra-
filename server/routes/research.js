@@ -12,7 +12,7 @@ const { RESEARCH_SYSTEM_PROMPT } = require('../prompts');
 
 const router = express.Router();
 
-const RESEARCH_MODEL = process.env.RESEARCH_MODEL || 'anthropic/claude-3.5-sonnet';
+const { RESEARCH_FALLBACKS } = require('../lib/models');
 
 /**
  * POST /api/research/generate
@@ -44,7 +44,7 @@ router.post('/generate', async (req, res) => {
     try {
       researchResult = await runWithLogging({
         role: 'research',
-        model: RESEARCH_MODEL,
+        model: RESEARCH_FALLBACKS,
         systemPrompt: RESEARCH_SYSTEM_PROMPT,
         userPrompt,
       });
@@ -81,7 +81,7 @@ router.post('/generate', async (req, res) => {
         topic,
         category: category || parsedCategory || null,
         raw_content: { summary, facts, links: links ?? [] },
-        model_used: RESEARCH_MODEL,
+        model_used: researchResult.modelUsed,
         status: 'pending',
       })
       .select()

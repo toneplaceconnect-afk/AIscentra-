@@ -29,7 +29,8 @@ function toNullableUuid(userId) {
  *
  * @param {Object} params
  * @param {'research'|'editor'|'assistant'} params.role
- * @param {string} params.model
+ * @param {string|string[]} params.model - one model, or a list tried
+ *   in order with automatic fallback on 429 (see lib/openrouter.js)
  * @param {string} params.systemPrompt
  * @param {string} params.userPrompt
  * @param {string|null} [params.userId]
@@ -38,7 +39,7 @@ function toNullableUuid(userId) {
  * @param {string|null} [params.articleId]
  * @param {number} [params.maxTokens]
  *
- * @returns {Promise<{content: string, promptTokens: number|null, completionTokens: number|null}>}
+ * @returns {Promise<{content: string, promptTokens: number|null, completionTokens: number|null, modelUsed: string}>}
  * @throws rethrows the original error after logging it to ai_runs
  */
 async function runWithLogging({
@@ -54,6 +55,9 @@ async function runWithLogging({
 }) {
   const startedAt = Date.now();
   const safeUserId = toNullableUuid(userId);
+  // For logging the *attempted* model on failure, before we know which
+  // (if any) fallback succeeded — falls back to the first candidate.
+  const primaryModel = Array.isArray(model) ? model[0] : model;
 
   try {
     const result = await callOpenRouter({ model, systemPrompt, userPrompt, maxTokens });
@@ -65,7 +69,7 @@ async function runWithLogging({
       session_id: sessionId,
       research_source_id: researchSourceId,
       article_id: articleId,
-      model,
+      model: result.modelUsed, // the model that actually responded, not the candidate list
       prompt: userPrompt,
       response: result.content,
       prompt_tokens: result.promptTokens,
@@ -90,7 +94,7 @@ async function runWithLogging({
       session_id: sessionId,
       research_source_id: researchSourceId,
       article_id: articleId,
-      model,
+      model: primaryModel,
       prompt: userPrompt,
       response: null,
       status: 'error',
