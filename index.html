@@ -152,14 +152,6 @@ nav {
   transition: opacity .15s !important;
 }
 .nav-cta:hover { opacity: 0.85 !important; }
-.nav-lang {
-  font-size: 11px; font-weight: 500;
-  color: rgba(255,255,255,0.3) !important;
-  letter-spacing: .06em;
-  border: 1px solid rgba(255,255,255,0.12);
-  padding: 4px 10px; border-radius: 9999px;
-}
-
 /* ── HERO ── */
 .hero {
   min-height: 100vh;
@@ -484,30 +476,30 @@ nav {
   margin-top: 8px; text-transform: uppercase; letter-spacing: .06em;
 }
 
-/* ── ARENA ── */
-.arena-section {
+/* ── PULSE ── */
+.pulse-section {
   padding: 100px 40px;
   background: var(--black);
   border-top: 1px solid rgba(255,255,255,0.05);
 }
-.arena-inner { max-width: var(--max); margin: 0 auto; }
-.arena-header { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 40px; }
-.arena-question {
+.pulse-inner { max-width: var(--max); margin: 0 auto; }
+.pulse-header { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 40px; }
+.pulse-question {
   background: rgba(255,255,255,0.03);
   border: 1px solid rgba(255,255,255,0.08);
   padding: 20px 24px; margin-bottom: 20px;
   font-size: 15px; font-style: italic;
   color: rgba(255,255,255,0.5); line-height: 1.5;
 }
-.arena-question strong { color: rgba(255,255,255,0.25); font-style:normal; font-size:11px; letter-spacing:.06em; text-transform:uppercase; display:block; margin-bottom:6px; }
-.arena-cards {
+.pulse-question strong { color: rgba(255,255,255,0.25); font-style:normal; font-size:11px; letter-spacing:.06em; text-transform:uppercase; display:block; margin-bottom:6px; }
+.pulse-cards {
   display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px;
   background: rgba(255,255,255,0.06);
   border: 1px solid rgba(255,255,255,0.06);
   margin-bottom: 28px;
 }
-.arena-card { background: var(--black); padding: 24px; }
-.arena-card-top {
+.pulse-card { background: var(--black); padding: 24px; }
+.pulse-card-top {
   display: flex; justify-content: space-between; align-items: center;
   margin-bottom: 16px;
 }
@@ -519,18 +511,18 @@ nav {
 .a-bar-bg { height: 2px; background: rgba(255,255,255,0.06); border-radius:2px; overflow:hidden; }
 .a-bar-fill { height:100%; border-radius:2px; background: var(--mint); transition: width 1.2s ease; }
 .a-footer { display:flex; justify-content:space-between; align-items:center; padding-top:16px; border-top:1px solid rgba(255,255,255,0.05); }
-.a-votes { font-size:11px; color:rgba(255,255,255,0.18); }
-.vote-btn {
+.a-stat { font-size:11px; color:rgba(255,255,255,0.18); }
+.stat-btn {
   font-size:12px; font-weight:500;
   color:rgba(255,255,255,0.3);
   border:1px solid rgba(255,255,255,0.1);
   background:none; padding:5px 14px; border-radius:9999px;
   cursor:pointer; transition:all .15s;
 }
-.vote-btn:hover { color:var(--obsidian); background:var(--mint); border-color:var(--mint); }
-.vote-btn.voted { color:var(--obsidian); background:var(--mint); border-color:var(--mint); }
-.arena-cta { display:flex; align-items:center; gap:20px; }
-.arena-note { font-size:13px; color:rgba(255,255,255,0.2); }
+.stat-btn:hover { color:var(--obsidian); background:var(--mint); border-color:var(--mint); }
+.stat-btn.selected { color:var(--obsidian); background:var(--mint); border-color:var(--mint); }
+.pulse-cta { display:flex; align-items:center; gap:20px; }
+.pulse-note { font-size:13px; color:rgba(255,255,255,0.2); }
 
 /* ── AI FINDER ── */
 .finder-section { padding: 100px 40px; border-top: 1px solid rgba(255,255,255,0.05); }
@@ -769,7 +761,7 @@ footer {
   .hero { grid-template-columns:1fr; padding:100px 20px 60px; }
   .hero-right { display:none; }
   .mission-inner,.obs-inner { grid-template-columns:1fr; gap:40px; }
-  .eco-cards,.model-cards,.arena-cards,.reports-grid,.about-cards { grid-template-columns:1fr; }
+  .eco-cards,.model-cards,.pulse-cards,.reports-grid,.about-cards { grid-template-columns:1fr; }
   .map-grid { grid-template-columns:1fr; }
   .map-models { grid-template-columns:1fr 1fr; }
   .footer-top { grid-template-columns:1fr; gap:40px; }
@@ -807,7 +799,6 @@ footer {
       <li><a href="#observatory">Signals</a></li>
       <li><a href="#finder">AI Finder</a></li>
       <li><a href="#reports">Reports</a></li>
-      <li class="keep"><a href="#" class="nav-lang">RU</a></li>
       <li class="keep"><a href="#pulse" class="nav-cta">View Pulse →</a></li>
     </ul>
   </div>
@@ -1026,7 +1017,7 @@ footer {
         </div>
         <div class="obs-row">
           <div class="obs-dot d-info"></div>
-          <div><div class="obs-text"><strong>Arena challenge launched:</strong> Business Argumentation — 8 AIscentrats competing</div><div class="obs-cat">Observatory · Usage Trend</div></div>
+          <div><div class="obs-text"><strong>Usage signal detected:</strong> Business Argumentation tasks — rising adoption across 8 tracked models</div><div class="obs-cat">Observatory · Usage Trend</div></div>
           <div class="obs-time">5h ago</div>
         </div>
         <div class="obs-row">
@@ -1135,9 +1126,9 @@ footer {
 </section>
 
 <!-- AI USAGE PULSE -->
-<section class="arena-section" id="pulse">
-  <div class="arena-inner">
-    <div class="arena-header">
+<section class="pulse-section" id="pulse">
+  <div class="pulse-inner">
+    <div class="pulse-header">
       <div>
         <div class="section-label">AIscentra Pulse</div>
         <h2 class="section-title">How people<br>use AI today</h2>
@@ -1145,15 +1136,15 @@ footer {
       <a href="#" class="btn-ghost">Full Pulse Report <span class="arr">↗</span></a>
     </div>
 
-    <div class="arena-question">
+    <div class="pulse-question">
       <strong>Current signal · Usage Trends · Updated weekly</strong>
       Real usage data collected from the community. Which AI models people use, for what tasks, and how satisfied they are with the results.
     </div>
 
-    <div class="arena-cards">
+    <div class="pulse-cards">
       <!-- Card 1: Most used models -->
-      <div class="arena-card">
-        <div class="arena-card-top">
+      <div class="pulse-card">
+        <div class="pulse-card-top">
           <span class="a-model">Usage Share</span>
           <span class="a-score" style="color:var(--mint);font-size:11px;letter-spacing:.05em">LIVE SIGNAL</span>
         </div>
@@ -1188,13 +1179,13 @@ footer {
           </div>
         </div>
         <div class="a-footer">
-          <span class="a-votes" style="font-size:11px;">Based on 12,400+ responses</span>
+          <span class="a-stat" style="font-size:11px;">Based on 12,400+ responses</span>
         </div>
       </div>
 
       <!-- Card 2: Task distribution -->
-      <div class="arena-card">
-        <div class="arena-card-top">
+      <div class="pulse-card">
+        <div class="pulse-card-top">
           <span class="a-model">Task Distribution</span>
           <span class="a-score" style="color:var(--mint);font-size:11px;letter-spacing:.05em">LIVE SIGNAL</span>
         </div>
@@ -1229,13 +1220,13 @@ footer {
           </div>
         </div>
         <div class="a-footer">
-          <span class="a-votes" style="font-size:11px;">Across all tracked models</span>
+          <span class="a-stat" style="font-size:11px;">Across all tracked models</span>
         </div>
       </div>
 
       <!-- Card 3: Satisfaction -->
-      <div class="arena-card">
-        <div class="arena-card-top">
+      <div class="pulse-card">
+        <div class="pulse-card-top">
           <span class="a-model">Satisfaction Signal</span>
           <span class="a-score" style="color:var(--mint);font-size:11px;letter-spacing:.05em">LIVE SIGNAL</span>
         </div>
@@ -1270,14 +1261,14 @@ footer {
           </div>
         </div>
         <div class="a-footer">
-          <span class="a-votes" style="font-size:11px;">Overall user satisfaction index</span>
+          <span class="a-stat" style="font-size:11px;">Overall user satisfaction index</span>
         </div>
       </div>
     </div>
 
-    <div class="arena-cta">
+    <div class="pulse-cta">
       <a href="#poll" class="btn-primary">Share your usage →</a>
-      <span class="arena-note">Your data contributes to the AIscentra Pulse Signal</span>
+      <span class="pulse-note">Your data contributes to the AIscentra Pulse Signal</span>
     </div>
   </div>
 </section>
@@ -1656,8 +1647,6 @@ footer {
   <div class="footer-bottom">
     <span class="footer-copy">© 2025–2026 AIscentra Intelligence Observatory</span>
     <div class="footer-socials">
-      <a href="#">EN</a>
-      <a href="#">RU</a>
       <a href="#">Privacy</a>
       <a href="#">Terms</a>
     </div>
@@ -1690,21 +1679,21 @@ const io = new IntersectionObserver(entries=>{
 const indexSec = document.querySelector('.index-section');
 if(indexSec) io.observe(indexSec);
 
-/* ── ARENA BARS ── */
-const arenaIO = new IntersectionObserver(entries=>{
+/* ── PULSE BARS ── */
+const pulseIO = new IntersectionObserver(entries=>{
   entries.forEach(e=>{
     if(e.isIntersecting){
       document.querySelectorAll('.a-bar-fill').forEach(b=>{
         setTimeout(()=>{ b.style.width=b.dataset.w+'%'; },400);
       });
-      arenaIO.disconnect();
+      pulseIO.disconnect();
     }
   });
 },{threshold:0.2});
-const arenaSec = document.querySelector('.arena-section');
-if(arenaSec) arenaIO.observe(arenaSec);
+const pulseSec = document.querySelector('.pulse-section');
+if(pulseSec) pulseIO.observe(pulseSec);
 
-/* ── VOTE ── */
+/* ── STAT BUTTON (legacy hook, no-op) ── */
 /* ── PULSE BARS ANIMATION ── */
 
 /* ── FINDER ── */
