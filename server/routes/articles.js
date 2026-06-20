@@ -81,6 +81,8 @@ router.post('/generate', async (req, res) => {
     }
 
     // Step 3: parse the Editor's JSON output.
+    // The Editor now produces a structured SIGNAL, not a traditional
+    // article — see server/prompts/index.js EDITOR_SYSTEM_PROMPT.
     let parsed;
     try {
       parsed = JSON.parse(editorResult.content);
@@ -93,27 +95,68 @@ router.post('/generate', async (req, res) => {
       });
     }
 
-    const { title, slug, excerpt, body } = parsed;
-    if (!title || !slug || !body) {
+    const {
+      title,
+      slug,
+      description,
+      summary_points,
+      signal_type,
+      impact_level,
+      confidence_level,
+      full_content,
+    } = parsed;
+
+    if (!title || !slug || !full_content) {
       return res.status(502).json({
-        error: 'Editor output missing required fields (title, slug, body).',
+        error: 'Editor output missing required fields (title, slug, full_content).',
         parsed,
         research_source_id: researchRow.id,
       });
     }
 
-    // Step 4: insert the article as a draft.
+    const ALLOWED_SIGNAL_TYPES = ['model_release', 'capability_update', 'tool_launch', 'ecosystem_shift'];
+    const ALLOWED_LEVELS = ['low', 'medium', 'high'];
+
+    if (signal_type && !ALLOWED_SIGNAL_TYPES.includes(signal_type)) {
+      return res.status(502).json({
+        error: `Editor returned invalid signal_type: "${signal_type}".`,
+        parsed,
+        research_source_id: researchRow.id,
+      });
+    }
+    if (impact_level && !ALLOWED_LEVELS.includes(impact_level)) {
+      return res.status(502).json({
+        error: `Editor returned invalid impact_level: "${impact_level}".`,
+        parsed,
+        research_source_id: researchRow.id,
+      });
+    }
+    if (confidence_level && !ALLOWED_LEVELS.includes(confidence_level)) {
+      return res.status(502).json({
+        error: `Editor returned invalid confidence_level: "${confidence_level}".`,
+        parsed,
+        research_source_id: researchRow.id,
+      });
+    }
+
+    // Step 4: insert the signal as a draft.
+    // `body` remains the existing column name (see db/004_signal_model.sql
+    // for why we don't rename it) — it stores the Editor's full_content.
     const { data: article, error: insertError } = await supabase
       .from('articles')
       .insert({
         research_source_id: researchRow.id,
         title,
         slug,
-        excerpt: excerpt ?? null,
-        body,
+        excerpt: description ?? null,
+        body: full_content,
         category: researchRow.category ?? null,
         language: 'en', // MVP: always 'en', never anything else
         status: 'draft',
+        signal_type: signal_type ?? null,
+        impact_level: impact_level ?? null,
+        confidence_level: confidence_level ?? null,
+        summary_points: Array.isArray(summary_points) ? summary_points : null,
       })
       .select()
       .single();
@@ -121,7 +164,7 @@ router.post('/generate', async (req, res) => {
     if (insertError) {
       console.error('[articles/generate] Failed to insert article:', insertError.message);
       return res.status(500).json({
-        error: 'Article generated but failed to save to database.',
+        error: 'Signal generated but failed to save to database.',
         detail: insertError.message,
       });
     }
@@ -172,18 +215,54 @@ router.patch('/:id/publish', async (req, res) => {
  * Defaults to status=published&language=en if not specified —
  * the public-facing default. Pass explicit params to see drafts
  * (e.g. for an internal admin view).
+ *
+ * Additional optional filters, for the signal model:
+ *   ?signal_type=model_release|capability_update|tool_launch|ecosystem_shift
+ *   ?impact_level=low|medium|high
+ *   ?limit=3 (defaults to 50, capped at 100)
+ *
+ * Examples:
+ *   /api/articles?limit=3
+ *   /api/articles?signal_type=model_release
+ *   /api/articles?impact_level=high
  */
 router.get('/', async (req, res) => {
   const status = req.query.status || 'published';
   const language = req.query.language || 'en';
+  const { signal_type, impact_level } = req.query;
+
+  const ALLOWED_SIGNAL_TYPES = ['model_release', 'capability_update', 'tool_launch', 'ecosystem_shift'];
+  const ALLOWED_LEVELS = ['low', 'medium', 'high'];
+
+  if (signal_type && !ALLOWED_SIGNAL_TYPES.includes(signal_type)) {
+    return res.status(400).json({
+      error: `Invalid signal_type. Must be one of: ${ALLOWED_SIGNAL_TYPES.join(', ')}.`,
+    });
+  }
+  if (impact_level && !ALLOWED_LEVELS.includes(impact_level)) {
+    return res.status(400).json({
+      error: `Invalid impact_level. Must be one of: ${ALLOWED_LEVELS.join(', ')}.`,
+    });
+  }
+
+  const rawLimit = parseInt(req.query.limit, 10);
+  const limit = Number.isFinite(rawLimit) && rawLimit > 0 ? Math.min(rawLimit, 100) : 50;
 
   try {
-    const { data: articles, error } = await supabase
+    let queryBuilder = supabase
       .from('articles')
-      .select('id, title, slug, excerpt, category, language, status, published_at, created_at')
+      .select(
+        'id, title, slug, excerpt, category, language, status, signal_type, impact_level, confidence_level, summary_points, published_at, created_at'
+      )
       .eq('status', status)
       .eq('language', language)
-      .order('published_at', { ascending: false, nullsFirst: false });
+      .order('published_at', { ascending: false, nullsFirst: false })
+      .limit(limit);
+
+    if (signal_type) queryBuilder = queryBuilder.eq('signal_type', signal_type);
+    if (impact_level) queryBuilder = queryBuilder.eq('impact_level', impact_level);
+
+    const { data: articles, error } = await queryBuilder;
 
     if (error) {
       console.error('[articles/list] Query failed:', error.message);

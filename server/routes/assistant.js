@@ -43,7 +43,7 @@ router.post('/query', async (req, res) => {
   try {
     const { data: articles, error: fetchError } = await supabase
       .from('articles')
-      .select('title, excerpt, body')
+      .select('title, excerpt, body, signal_type, impact_level, confidence_level, summary_points')
       .eq('status', 'published')
       .eq('language', 'en')
       .order('published_at', { ascending: false })
