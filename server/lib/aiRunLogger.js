@@ -8,6 +8,22 @@
 const { supabase } = require('./supabase');
 const { callOpenRouter } = require('./openrouter');
 
+// ai_runs.user_id and articles.user_id are `uuid references auth.users(id)`
+// — a real foreign key. getCurrentUser() (server/lib/currentUser.js)
+// returns { id: "demo-user" } by design (per spec), which is NOT a valid
+// UUID and does not exist in auth.users. Writing it as-is would violate
+// the FK constraint and fail every insert.
+//
+// This is the one seam where that mismatch is resolved: non-UUID user
+// ids are written as null instead of breaking the insert. The day real
+// auth provides actual auth.users UUIDs, this guard becomes a no-op —
+// nothing else needs to change.
+const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+
+function toNullableUuid(userId) {
+  return typeof userId === 'string' && UUID_RE.test(userId) ? userId : null;
+}
+
 /**
  * Calls OpenRouter and logs the attempt (success or failure) to ai_runs.
  *
@@ -37,6 +53,7 @@ async function runWithLogging({
   maxTokens = 2000,
 }) {
   const startedAt = Date.now();
+  const safeUserId = toNullableUuid(userId);
 
   try {
     const result = await callOpenRouter({ model, systemPrompt, userPrompt, maxTokens });
@@ -44,7 +61,7 @@ async function runWithLogging({
 
     const { error: logError } = await supabase.from('ai_runs').insert({
       role,
-      user_id: userId,
+      user_id: safeUserId,
       session_id: sessionId,
       research_source_id: researchSourceId,
       article_id: articleId,
@@ -69,7 +86,7 @@ async function runWithLogging({
 
     const { error: logError } = await supabase.from('ai_runs').insert({
       role,
-      user_id: userId,
+      user_id: safeUserId,
       session_id: sessionId,
       research_source_id: researchSourceId,
       article_id: articleId,
@@ -89,4 +106,5 @@ async function runWithLogging({
   }
 }
 
-module.exports = { runWithLogging };
+module.exports = { runWithLogging, toNullableUuid };
+

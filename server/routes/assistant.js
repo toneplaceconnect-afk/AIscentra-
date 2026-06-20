@@ -8,6 +8,7 @@
 const express = require('express');
 const { supabase } = require('../lib/supabase');
 const { runWithLogging } = require('../lib/aiRunLogger');
+const { getCurrentUser } = require('../lib/currentUser');
 const { ASSISTANT_SYSTEM_PROMPT, buildAssistantUserPrompt } = require('../prompts');
 
 const router = express.Router();
@@ -23,18 +24,28 @@ const CONTEXT_ARTICLE_LIMIT = 8;
 
 /**
  * POST /api/assistant/query
- * Body: { query: string, user_id?: string, session_id?: string }
+ * Body: { query: string, session_id?: string }
+ *
+ * Note: there is no user_id in the request body. The user is never
+ * taken from client input — it always comes from getCurrentUser(),
+ * which is the single seam where real auth will be wired in later.
+ * No route, here or elsewhere, should read req.body.user_id directly.
  *
  * Flow:
- *   1. Validate the query.
- *   2. Fetch the most recent published EN articles as context.
+ *   1. Resolve the current user via getCurrentUser() — today this
+ *      is always { id: "demo-user" }; tomorrow it can read a real
+ *      session without this route changing at all.
+ *   2. Validate the query.
+ *   3. Fetch the most recent published EN articles as context.
  *      (status='published' AND language='en' — no exceptions.)
- *   3. Build a prompt embedding those articles + the user's question.
- *   4. Call OpenRouter as the Assistant role.
- *   5. Log the call to ai_runs with role='assistant', user_id, session_id.
+ *   4. Build a prompt embedding those articles + the user's question.
+ *   5. Call OpenRouter as the Assistant role.
+ *   6. Log the call to ai_runs with role='assistant', the resolved
+ *      user.id, and session_id.
  */
 router.post('/query', async (req, res) => {
-  const { query, user_id, session_id } = req.body || {};
+  const currentUser = await getCurrentUser(req);
+  const { query, session_id } = req.body || {};
 
   if (!query || typeof query !== 'string' || query.trim().length === 0) {
     return res.status(400).json({ error: 'Request body must include a non-empty "query" string.' });
@@ -71,7 +82,7 @@ router.post('/query', async (req, res) => {
         model: ASSISTANT_MODEL,
         systemPrompt: ASSISTANT_SYSTEM_PROMPT,
         userPrompt,
-        userId: user_id || null,
+        userId: currentUser.id,
         sessionId: session_id || null,
       });
     } catch (aiErr) {
@@ -93,3 +104,4 @@ router.post('/query', async (req, res) => {
 });
 
 module.exports = router;
+

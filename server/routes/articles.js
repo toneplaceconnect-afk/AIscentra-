@@ -8,7 +8,8 @@
 
 const express = require('express');
 const { supabase } = require('../lib/supabase');
-const { runWithLogging } = require('../lib/aiRunLogger');
+const { runWithLogging, toNullableUuid } = require('../lib/aiRunLogger');
+const { getCurrentUser } = require('../lib/currentUser');
 const { EDITOR_SYSTEM_PROMPT } = require('../prompts');
 
 const router = express.Router();
@@ -32,6 +33,8 @@ const EDITOR_MODEL = process.env.EDITOR_MODEL || 'anthropic/claude-3.5-sonnet';
  * nothing to generate from, and that's a normal, expected state.
  */
 router.post('/generate', async (req, res) => {
+  const currentUser = await getCurrentUser(req);
+
   try {
     // Step 1: atomically claim a pending research source.
     const { data: claimed, error: claimError } = await supabase.rpc(
@@ -146,6 +149,7 @@ router.post('/generate', async (req, res) => {
       .from('articles')
       .insert({
         research_source_id: researchRow.id,
+        user_id: toNullableUuid(currentUser.id),
         title,
         slug,
         excerpt: description ?? null,
