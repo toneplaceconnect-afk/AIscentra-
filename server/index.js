@@ -16,6 +16,7 @@ const cors = require('cors');
 const articlesRouter = require('./routes/articles');
 const researchRouter = require('./routes/research');
 const assistantRouter = require('./routes/assistant');
+const modelsRouter = require('./routes/models');
 
 const app = express();
 
@@ -60,6 +61,7 @@ app.get('/health', (req, res) => {
 app.use('/api/articles', articlesRouter);
 app.use('/api/research', researchRouter);
 app.use('/api/assistant', assistantRouter);
+app.use('/api/models', modelsRouter);
 
 // Catch-all 404 for unmatched API routes
 app.use('/api', (req, res) => {
