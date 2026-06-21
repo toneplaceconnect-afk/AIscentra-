@@ -257,3 +257,15 @@ h1 { font-family: var(--sans); font-weight: 700; font-size: clamp(28px, 4vw, 44p
   .nav-links { display: none; }
   main { padding: 24px 16px 60px; }
 }
+
+/* ── Home page hero (additive — does not modify any existing rule above) ── */
+.hero { padding: 24px 0 32px; max-width: 720px; }
+.hero-title {
+  font-family: var(--sans); font-weight: 700;
+  font-size: clamp(36px, 6vw, 64px); line-height: 1.05;
+  letter-spacing: -.02em; color: var(--bone); margin-bottom: 20px;
+}
+.hero-sub {
+  font-family: var(--sans); font-size: 16px; color: var(--fog);
+  line-height: 1.6; max-width: 560px;
+}
