@@ -56,6 +56,8 @@ export default async function SignalDetailPage({ params }) {
         </ul>
       )}
 
+      <div className="divider" style={{ margin: '32px 0' }} />
+
       <div className="signal-detail__body">
         {(signal.full_content || signal.body || '')
           .split('\n')
@@ -64,6 +66,11 @@ export default async function SignalDetailPage({ params }) {
             <p key={i}>{paragraph}</p>
           ))}
       </div>
+
+      <div className="divider" style={{ margin: '40px 0 24px' }} />
+      <p className="signal-detail__footer-note mono steel">
+        Signal tracked by AIscentra Observatory · {signal.category || signal.signal_type}
+      </p>
     </article>
   );
 }
