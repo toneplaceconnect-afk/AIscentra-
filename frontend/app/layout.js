@@ -20,6 +20,7 @@ export default function RootLayout({ children }) {
             <a href="/">Home</a>
             <a href="/signals">All signals</a>
             <a href="/models">Models</a>
+            <a href="/about">About</a>
           </div>
         </nav>
         <main>{children}</main>
@@ -29,6 +30,7 @@ export default function RootLayout({ children }) {
             <a href="/">Home</a>
             <a href="/signals">All signals</a>
             <a href="/models">Models</a>
+            <a href="/about">About</a>
           </div>
         </footer>
       </body>
