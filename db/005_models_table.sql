@@ -30,6 +30,25 @@
 -- stars" describes one model; "94.2 vs 91.8" compares two.
 -- ════════════════════════════════════════════════════════════════
 
+-- ── Clean up the old, abandoned ranking-based schema ──
+--
+-- Before the current Researcher/Editor/Assistant pipeline existed,
+-- an earlier schema iteration created 5 tables built around a
+-- ranking/scoring concept: models, model_metrics, events, insights,
+-- snapshots — with columns like current_score and rank_position.
+-- That's the exact comparative-ranking mechanic this project moved
+-- away from, and none of these tables are read or written by any
+-- code in server/ — they're dead leftover schema from an earlier
+-- direction.
+--
+-- Dropping all 5 now, in dependency order, so the database matches
+-- what the actual code uses and nothing ambiguous is left behind.
+drop table if exists snapshots cascade;
+drop table if exists insights cascade;
+drop table if exists events cascade;
+drop table if exists model_metrics cascade;
+drop table if exists models cascade;
+
 create table if not exists models (
   id uuid primary key default gen_random_uuid(),
 
