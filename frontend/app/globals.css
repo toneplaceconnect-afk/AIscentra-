@@ -272,3 +272,50 @@ h1 { font-family: var(--sans); font-weight: 700; font-size: clamp(28px, 4vw, 44p
 
 /* ── Signal detail footer note (additive) ── */
 .signal-detail__footer-note { font-size: 11px; letter-spacing: .06em; text-transform: uppercase; }
+
+/* ── Model cards & detail page (additive — new page, new classes only) ── */
+.model-card { display: flex; flex-direction: column; }
+.model-card__avatar {
+  width: 40px; height: 40px; flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--mono); font-size: 11px; font-weight: 400;
+  color: var(--void); margin-bottom: 16px; letter-spacing: .02em;
+}
+.model-card__tags { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 8px; }
+
+.model-detail__header { display: flex; align-items: center; gap: 20px; margin-bottom: 16px; }
+.model-detail__avatar { width: 56px; height: 56px; font-size: 16px; margin-bottom: 0; }
+
+.model-tabs__nav {
+  display: flex; gap: 0; border-bottom: 1px solid var(--graphite);
+  margin-bottom: 24px; flex-wrap: wrap;
+}
+.model-tabs__btn {
+  background: none; border: none; padding: 10px 18px;
+  font-family: var(--mono); font-size: 11px; text-transform: uppercase;
+  letter-spacing: .08em; color: var(--steel); border-bottom: 2px solid transparent;
+  transition: color .15s, border-color .15s;
+}
+.model-tabs__btn:hover { color: var(--bone); }
+.model-tabs__btn--active { color: var(--ember); border-bottom-color: var(--ember); }
+
+.model-tabs__grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1px; background: var(--graphite); }
+.model-tabs__grid-row {
+  background: var(--void); padding: 14px 16px;
+  display: flex; flex-direction: column; gap: 4px;
+}
+.model-tabs__grid-row dt { font-family: var(--mono); font-size: 9px; text-transform: uppercase; letter-spacing: .1em; color: var(--steel); }
+.model-tabs__grid-row dd { font-family: var(--sans); font-size: 14px; color: var(--bone); }
+
+.model-tabs__narrative-block { margin-bottom: 24px; }
+.model-tabs__narrative-block h4 { font-family: var(--sans); font-size: 16px; font-weight: 700; color: var(--bone); margin-bottom: 8px; }
+.model-tabs__narrative-block p { font-family: var(--sans); font-size: 14px; color: var(--fog); line-height: 1.65; }
+
+.model-tabs__sources { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+.model-tabs__sources li { font-family: var(--sans); font-size: 13px; }
+.model-tabs__sources a { color: var(--ember); }
+.model-tabs__sources a:hover { text-decoration: underline; }
+
+@media (max-width: 600px) {
+  .model-tabs__grid { grid-template-columns: 1fr; }
+}

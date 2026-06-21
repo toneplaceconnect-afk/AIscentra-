@@ -15,6 +15,7 @@
 // No backend code is modified by this file or this frontend layer.
 
 import { queryMockSignals, getMockSignalBySlug } from './mockSignals';
+import { queryMockModels, getMockModelBySlug } from './mockModels';
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || null;
 
@@ -77,3 +78,57 @@ export async function fetchSignalBySlug(slug) {
 
 /** True when running against local mock data (no backend configured). */
 export const isMockMode = !API_BASE_URL;
+
+/**
+ * Fetches a list of AI models, optionally filtered by license type.
+ * Mirrors fetchSignals() exactly — same mock/real switch via
+ * NEXT_PUBLIC_API_BASE_URL, same shape of contract.
+ *
+ * @param {Object} [params]
+ * @param {string} [params.license_type] - proprietary | open_source | open_weights
+ * @returns {Promise<Array>}
+ */
+export async function fetchModels({ license_type } = {}) {
+  if (!API_BASE_URL) {
+    return queryMockModels({ license_type });
+  }
+
+  const query = new URLSearchParams();
+  if (license_type) query.set('license_type', license_type);
+
+  const res = await fetch(`${API_BASE_URL}/api/models?${query.toString()}`, {
+    cache: 'no-store',
+  });
+
+  if (!res.ok) {
+    throw new Error(`Failed to fetch models: ${res.status} ${res.statusText}`);
+  }
+
+  const data = await res.json();
+  return data.models ?? [];
+}
+
+/**
+ * Fetches a single model's full intelligence card by slug. Returns
+ * null if not found, same not-found convention as fetchSignalBySlug.
+ *
+ * @param {string} slug
+ * @returns {Promise<Object|null>}
+ */
+export async function fetchModelBySlug(slug) {
+  if (!API_BASE_URL) {
+    return getMockModelBySlug(slug);
+  }
+
+  const res = await fetch(`${API_BASE_URL}/api/models/${slug}`, {
+    cache: 'no-store',
+  });
+
+  if (res.status === 404) return null;
+  if (!res.ok) {
+    throw new Error(`Failed to fetch model "${slug}": ${res.status} ${res.statusText}`);
+  }
+
+  const data = await res.json();
+  return data.model ?? null;
+}
